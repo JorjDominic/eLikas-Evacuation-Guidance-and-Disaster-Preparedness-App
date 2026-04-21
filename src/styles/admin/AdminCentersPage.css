@@ -1,0 +1,71 @@
+.admin-centers-page {
+	min-height: 100vh;
+	padding: 2rem 1rem;
+	background: #f6f6f9;
+	font-family: 'Poppins', sans-serif;
+}
+
+.admin-page-wrap {
+	width: min(1100px, 94%);
+	margin: 0 auto;
+	background: #fff;
+	border-radius: 1rem;
+	padding: 1rem 1.1rem;
+	box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+}
+
+.admin-head {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 0.8rem;
+	margin-bottom: 0.8rem;
+}
+
+.admin-head h1 {
+	margin: 0;
+	font-size: 1.4rem;
+}
+
+.admin-head button {
+	border: none;
+	background: #1d4ed8;
+	color: #fff;
+	padding: 0.55rem 0.8rem;
+	border-radius: 0.5rem;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+.admin-centers-page table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+.admin-centers-page th,
+.admin-centers-page td {
+	padding: 0.65rem;
+	border-bottom: 1px solid #e5e7eb;
+	text-align: left;
+}
+
+.admin-centers-page th {
+	font-size: 0.85rem;
+	color: #64748b;
+}
+
+.admin-centers-page td button {
+	border: none;
+	background: #eef4ff;
+	color: #1d4ed8;
+	padding: 0.4rem 0.65rem;
+	border-radius: 0.45rem;
+	cursor: pointer;
+}
+
+@media (max-width: 760px) {
+	.admin-centers-page table {
+		display: block;
+		overflow-x: auto;
+	}
+}

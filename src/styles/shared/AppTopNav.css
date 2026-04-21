@@ -1,0 +1,51 @@
+.app-top-nav {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  color: #fff;
+  flex-wrap: wrap;
+  font-family: 'Poppins', sans-serif;
+}
+
+.app-top-nav.user {
+  background: linear-gradient(135deg, #6c9bcf 0%, #5a82b8 50%, #1b9c85 100%);
+}
+
+.app-top-nav.admin {
+  background: linear-gradient(135deg, #334155 0%, #1e293b 40%, #0f172a 100%);
+}
+
+.app-top-nav__brand {
+  font-weight: 700;
+}
+
+.app-top-nav__links {
+  display: flex;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+}
+
+.app-top-nav__btn {
+  border: none;
+  border-radius: 0.45rem;
+  padding: 0.45rem 0.65rem;
+  cursor: pointer;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+}
+
+.app-top-nav__btn.active {
+  background: #fff;
+  color: #1d4ed8;
+}
+
+.app-top-nav__btn.logout {
+  background: #ef4444;
+  color: #fff;
+}

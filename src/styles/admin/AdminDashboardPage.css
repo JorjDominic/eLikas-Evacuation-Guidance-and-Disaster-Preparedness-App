@@ -1,0 +1,112 @@
+.admin-dashboard-page {
+	min-height: 100vh;
+	padding: 2rem 1rem;
+	background: #f6f6f9;
+	font-family: 'Poppins', sans-serif;
+}
+
+.admin-wrap {
+	width: min(1100px, 94%);
+	margin: 0 auto;
+	display: grid;
+	gap: 1rem;
+}
+
+.admin-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 1rem;
+}
+
+.admin-header h1 {
+	margin: 0;
+}
+
+.admin-header p {
+	margin: 0.25rem 0 0;
+	color: #64748b;
+}
+
+.admin-stats {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+	gap: 0.8rem;
+}
+
+.admin-stat-card {
+	background: #fff;
+	border-radius: 1rem;
+	padding: 1.1rem;
+	box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+}
+
+.admin-stat-card h3 {
+	margin: 0;
+	font-size: 0.9rem;
+	color: #64748b;
+}
+
+.admin-stat-card p {
+	margin: 0.3rem 0 0;
+	font-size: 1.8rem;
+	font-weight: 800;
+	color: #111827;
+}
+
+.admin-panels {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 0.9rem;
+}
+
+.admin-panel-card {
+	background: #fff;
+	border-radius: 1rem;
+	padding: 1.2rem;
+	box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+}
+
+.admin-panel-card h2 {
+	margin-top: 0;
+	font-size: 1.1rem;
+}
+
+.admin-panel-card ul {
+	margin: 0;
+	padding-left: 1rem;
+	line-height: 1.8;
+	color: #374151;
+}
+
+.admin-actions {
+	margin-top: 0.9rem;
+	display: flex;
+	gap: 0.55rem;
+}
+
+.admin-actions button {
+	border: none;
+	background: #eef4ff;
+	color: #1d4ed8;
+	padding: 0.6rem 0.75rem;
+	border-radius: 0.5rem;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+.dashboard-logout {
+	border: none;
+	border-radius: 0.6rem;
+	padding: 0.7rem 1rem;
+	background: #ef4444;
+	color: #fff;
+	cursor: pointer;
+	font-weight: 600;
+}
+
+@media (max-width: 900px) {
+	.admin-panels {
+		grid-template-columns: 1fr;
+	}
+}

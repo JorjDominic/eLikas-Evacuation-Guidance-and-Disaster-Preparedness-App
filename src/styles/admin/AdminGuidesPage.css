@@ -1,0 +1,79 @@
+.admin-guides-page {
+	min-height: 100vh;
+	padding: 2rem 1rem;
+	background: #f6f6f9;
+	font-family: 'Poppins', sans-serif;
+}
+
+.admin-page-wrap {
+	width: min(1100px, 94%);
+	margin: 0 auto;
+	background: #fff;
+	border-radius: 1rem;
+	padding: 1rem 1.1rem;
+	box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+}
+
+.admin-head {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 0.8rem;
+	margin-bottom: 0.8rem;
+}
+
+.admin-head h1 {
+	margin: 0;
+	font-size: 1.4rem;
+}
+
+.admin-head button {
+	border: none;
+	background: #1d4ed8;
+	color: #fff;
+	padding: 0.55rem 0.8rem;
+	border-radius: 0.5rem;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+.guide-admin-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+	gap: 0.8rem;
+}
+
+.guide-admin-card {
+	background: #fff;
+	border: 1px solid #e5e7eb;
+	border-radius: 0.8rem;
+	padding: 0.9rem;
+}
+
+.guide-admin-card span {
+	font-size: 0.7rem;
+	font-weight: 700;
+	padding: 0.2rem 0.45rem;
+	border-radius: 999px;
+	background: #e2e8f0;
+	color: #475569;
+}
+
+.guide-admin-card h3 {
+	margin: 0.6rem 0;
+	font-size: 1rem;
+}
+
+.guide-admin-card div {
+	display: flex;
+	gap: 0.5rem;
+}
+
+.guide-admin-card button {
+	border: none;
+	background: #eef4ff;
+	color: #1d4ed8;
+	padding: 0.45rem 0.65rem;
+	border-radius: 0.45rem;
+	cursor: pointer;
+}

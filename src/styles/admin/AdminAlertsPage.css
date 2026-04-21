@@ -1,0 +1,76 @@
+.admin-alerts-page {
+	min-height: 100vh;
+	padding: 2rem 1rem;
+	background: #f6f6f9;
+	font-family: 'Poppins', sans-serif;
+}
+
+.admin-page-wrap {
+	width: min(1100px, 94%);
+	margin: 0 auto;
+	background: #fff;
+	border-radius: 1rem;
+	padding: 1rem 1.1rem;
+	box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+}
+
+.admin-head {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 0.8rem;
+	margin-bottom: 0.8rem;
+}
+
+.admin-head h1 {
+	margin: 0;
+	font-size: 1.4rem;
+}
+
+.admin-head button {
+	border: none;
+	background: #1d4ed8;
+	color: #fff;
+	padding: 0.55rem 0.8rem;
+	border-radius: 0.5rem;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+.admin-alert-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+	gap: 0.8rem;
+}
+
+.admin-alert-card {
+	background: #fff;
+	border: 1px solid #e5e7eb;
+	border-radius: 0.8rem;
+	padding: 0.9rem;
+}
+
+.admin-alert-card h3 {
+	margin: 0;
+	font-size: 1rem;
+}
+
+.admin-alert-card p {
+	margin: 0.45rem 0;
+	color: #374151;
+}
+
+.admin-alert-card div {
+	margin-top: 0.65rem;
+	display: flex;
+	gap: 0.5rem;
+}
+
+.admin-alert-card button {
+	border: none;
+	background: #eef4ff;
+	color: #1d4ed8;
+	padding: 0.45rem 0.65rem;
+	border-radius: 0.45rem;
+	cursor: pointer;
+}

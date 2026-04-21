@@ -1,0 +1,57 @@
+.guides-page {
+	min-height: 100vh;
+	padding: 2rem 1rem;
+	background: #f6f6f9;
+	font-family: 'Poppins', sans-serif;
+}
+
+.guides-wrap {
+	width: min(1000px, 94%);
+	margin: 0 auto;
+	display: grid;
+	gap: 1rem;
+}
+
+.guides-wrap h2 {
+	margin: 0.2rem 0 0;
+}
+
+.guide-grid,
+.route-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+	gap: 0.8rem;
+}
+
+.guide-card,
+.route-card {
+	background: #fff;
+	border-radius: 1rem;
+	padding: 1rem;
+	box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+}
+
+.guide-card h3,
+.route-card h4 {
+	margin: 0;
+}
+
+.guide-card p,
+.route-card p {
+	margin: 0.55rem 0;
+	color: #374151;
+}
+
+.guide-card button {
+	border: none;
+	background: #eef4ff;
+	color: #1d4ed8;
+	padding: 0.55rem 0.75rem;
+	border-radius: 0.5rem;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+.route-card small {
+	color: #64748b;
+}
