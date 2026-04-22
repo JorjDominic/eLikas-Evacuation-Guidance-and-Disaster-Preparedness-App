@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import '../styles/user/index.css';
+import MapSection from '../components/MapSection';
 
 function LandingPage({ onLogin, onRegister }) {
   const heroImages = [
@@ -38,8 +39,8 @@ function LandingPage({ onLogin, onRegister }) {
             eLikas Bulacan
           </a>
           <nav className="desktop-links" aria-label="Primary">
-            {/*<a href="#alerts">Alerts</a>*/}  {/* Commenting out Alerts link since there is no backdend for it yet*/}
             <a href="#features">Features</a>
+            <a href="#map">Map</a>
             <a href="#protocols">Protocols</a>
             <a href="#contact">Contact</a>
           </nav>
@@ -100,6 +101,28 @@ function LandingPage({ onLogin, onRegister }) {
         </div>
       </section>
 
+      {/* Stats Strip */}
+      <section className="stats-strip">
+        <div className="layout stats-grid">
+          <div className="stat-item">
+            <span className="stat-num">24</span>
+            <span className="stat-label">Evacuation Centers</span>
+          </div>
+          <div className="stat-item">
+            <span className="stat-num">21</span>
+            <span className="stat-label">Municipalities</span>
+          </div>
+          <div className="stat-item">
+            <span className="stat-num">569</span>
+            <span className="stat-label">Barangays Covered</span>
+          </div>
+          <div className="stat-item">
+            <span className="stat-num">24/7</span>
+            <span className="stat-label">Emergency Monitoring</span>
+          </div>
+        </div>
+      </section>
+
       <main>
         <section id="protocols" className="panel-section">
           <div className="layout">
@@ -152,6 +175,8 @@ function LandingPage({ onLogin, onRegister }) {
             </div>
           </div>
         </section>
+
+        <MapSection />
 
         <section className="steps-section">
           <div className="layout">
