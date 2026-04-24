@@ -5,13 +5,17 @@ function ForgotPasswordPage({ onBackToLogin, onSubmitReset }) {
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const submitReset = (event) => {
+  const submitReset = async (event) => {
     event.preventDefault();
     setError('');
     setMessage('');
+    setLoading(true);
 
-    const result = onSubmitReset(email);
+    const result = await onSubmitReset(email);
+    setLoading(false);
+
     if (!result.success) {
       setError(result.message);
       return;
@@ -50,8 +54,8 @@ function ForgotPasswordPage({ onBackToLogin, onSubmitReset }) {
             onChange={(event) => setEmail(event.target.value)}
           />
 
-          <button type="submit" className="sb-auth-submit sb-forgot-submit">
-            Ipadala ang Link sa Pag-reset
+          <button type="submit" className="sb-auth-submit sb-forgot-submit" disabled={loading}>
+            {loading ? 'Sending…' : 'Ipadala ang Link sa Pag-reset'}
           </button>
         </form>
 

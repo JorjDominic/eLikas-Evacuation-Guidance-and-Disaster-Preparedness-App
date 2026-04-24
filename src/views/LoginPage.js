@@ -5,6 +5,7 @@ function LoginPage({ onBack, onLogin, onRegister, onForgotPassword }) {
   const [activeTab, setActiveTab] = useState('login');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const [loginForm, setLoginForm] = useState({
     email: '',
@@ -18,32 +19,39 @@ function LoginPage({ onBack, onLogin, onRegister, onForgotPassword }) {
     confirmPassword: ''
   });
 
-  const submitLogin = (event) => {
+  const submitLogin = async (event) => {
     event.preventDefault();
     setMessage('');
     setError('');
+    setLoading(true);
 
-    const result = onLogin(loginForm);
+    const result = await onLogin(loginForm);
+    setLoading(false);
+
     if (!result.success) {
       setError(result.message);
       return;
     }
-
-    setMessage(`Welcome back, ${result.user.name}!`);
   };
 
-  const submitRegister = (event) => {
+  const submitRegister = async (event) => {
     event.preventDefault();
     setMessage('');
     setError('');
+    setLoading(true);
 
-    const result = onRegister(registerForm);
+    const result = await onRegister(registerForm);
+    setLoading(false);
+
     if (!result.success) {
       setError(result.message);
       return;
     }
 
-    setMessage(`Account created. Welcome, ${result.user.name}!`);
+    if (result.confirmEmail) {
+      setMessage('Account created! Please check your email to confirm your account.');
+      return;
+    }
   };
 
   return (
@@ -90,10 +98,6 @@ function LoginPage({ onBack, onLogin, onRegister, onForgotPassword }) {
           {error && <div className="sb-auth-error">{error}</div>}
           {message && <div className="sb-auth-message">{message}</div>}
 
-          <div className="sb-auth-hint">
-            Demo accounts: <strong>admin@elikas.com / admin123</strong> and <strong>user@elikas.com / user123</strong>
-          </div>
-
           {activeTab === 'login' ? (
             <form className="sb-auth-form" onSubmit={submitLogin}>
               <label htmlFor="sb-login-email">Email / Username</label>
@@ -119,7 +123,9 @@ function LoginPage({ onBack, onLogin, onRegister, onForgotPassword }) {
                 onChange={(event) => setLoginForm({ ...loginForm, password: event.target.value })}
               />
 
-              <button type="submit" className="sb-auth-submit">Log-in</button>
+              <button type="submit" className="sb-auth-submit" disabled={loading}>
+                {loading ? 'Logging in…' : 'Log-in'}
+              </button>
             </form>
           ) : (
             <form className="sb-auth-form" onSubmit={submitRegister}>
@@ -159,7 +165,9 @@ function LoginPage({ onBack, onLogin, onRegister, onForgotPassword }) {
                 onChange={(event) => setRegisterForm({ ...registerForm, confirmPassword: event.target.value })}
               />
 
-              <button type="submit" className="sb-auth-submit">Create Account</button>
+              <button type="submit" className="sb-auth-submit" disabled={loading}>
+                {loading ? 'Creating account…' : 'Create Account'}
+              </button>
             </form>
           )}
         </section>

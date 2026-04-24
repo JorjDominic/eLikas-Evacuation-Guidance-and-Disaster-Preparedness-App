@@ -1,5 +1,7 @@
 import React from 'react';
+import { supabase } from './config/supabase';
 import LandingPage from './views';
+import LoginPage from './views/LoginPage';
 import ForgotPasswordPage from './views/ForgotPasswordPage';
 import DashboardPage from './views/user/DashboardPage';
 import AdminDashboardPage from './views/admin/AdminDashboardPage';
@@ -18,6 +20,7 @@ import ThemeToggleButton from './views/ThemeToggleButton';
 function App() {
   const [page, setPage] = React.useState('landing');
   const [currentUser, setCurrentUser] = React.useState(null);
+  const [authLoading, setAuthLoading] = React.useState(true);
   const [theme, setTheme] = React.useState(() => {
     const savedTheme = window.localStorage.getItem('elikas-theme');
     if (savedTheme === 'light' || savedTheme === 'dark') {
@@ -32,28 +35,75 @@ function App() {
     window.localStorage.setItem('elikas-theme', theme);
   }, [theme]);
 
+  React.useEffect(() => {
+    const redirectByRole = (user) => {
+      const role =
+        user.user_metadata?.role ||
+        user.app_metadata?.role ||
+        'user';
+      const name = user.user_metadata?.name || user.email;
+      setCurrentUser({ name, email: user.email, role });
+      setPage(role === 'admin' ? 'admin-dashboard' : 'dashboard');
+    };
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'INITIAL_SESSION') {
+        if (session?.user) redirectByRole(session.user);
+        setAuthLoading(false);
+      } else if (event === 'SIGNED_IN') {
+        if (session?.user) redirectByRole(session.user);
+      } else if (event === 'SIGNED_OUT') {
+        setCurrentUser(null);
+        setPage('landing');
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+
   const handleThemeToggle = () => {
     setTheme((currentTheme) => (currentTheme === 'dark' ? 'light' : 'dark'));
   };
 
-  const loginAsRole = (role) => {
-    const isAdmin = role === 'admin';
-    const mockUser = {
-      name: isAdmin ? 'Temporary Admin' : 'Temporary User',
-      email: isAdmin ? 'admin@temporary.local' : 'user@temporary.local',
-      role
-    };
-
-    setCurrentUser(mockUser);
-    setPage(isAdmin ? 'admin-dashboard' : 'dashboard');
+  const handleLogin = async (loginForm) => {
+    const { error } = await supabase.auth.signInWithPassword({
+      email: loginForm.email,
+      password: loginForm.password
+    });
+    if (error) return { success: false, message: error.message };
+    return { success: true };
   };
 
-  const handleLogout = () => {
-    setCurrentUser(null);
-    setPage('landing');
+  const handleRegister = async (registerForm) => {
+    const { name, email, password, confirmPassword } = registerForm;
+
+    if (!name.trim() || !email.trim() || !password || !confirmPassword) {
+      return { success: false, message: 'Please fill in all fields.' };
+    }
+
+    if (password !== confirmPassword) {
+      return { success: false, message: 'Passwords do not match.' };
+    }
+
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { data: { name: name.trim(), role: 'user' } }
+    });
+    if (error) return { success: false, message: error.message };
+
+    if (!data.session) {
+      return { success: true, confirmEmail: true };
+    }
+
+    // session exists → SIGNED_IN event will handle redirect
+    return { success: true };
   };
 
-  const handleForgotPassword = (email) => {
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+  };
+
+  const handleForgotPassword = async (email) => {
     const cleanedEmail = email.trim();
     if (!cleanedEmail) {
       return { success: false, message: 'Please enter your email address.' };
@@ -63,6 +113,11 @@ function App() {
     if (!validEmail) {
       return { success: false, message: 'Please enter a valid email address.' };
     }
+
+    const { error } = await supabase.auth.resetPasswordForEmail(cleanedEmail, {
+      redirectTo: window.location.origin
+    });
+    if (error) return { success: false, message: error.message };
 
     return {
       success: true,
@@ -116,39 +171,20 @@ function App() {
     }
   };
 
+  if (authLoading) {
+    return null;
+  }
+
   if (page === 'auth') {
     return (
       <>
         <ThemeToggleButton theme={theme} onToggle={handleThemeToggle} />
-        <div className="sb-auth-page">
-          <button
-            type="button"
-            className="sb-auth-back sb-auth-back-fixed"
-            onClick={() => setPage('landing')}
-            aria-label="Back to landing"
-          >
-            <span aria-hidden="true">&#8592;</span>
-          </button>
-          <section className="sb-forgot-card" style={{ maxWidth: 520 }}>
-            <h2>Temporary Login</h2>
-            <p>Select a role to continue for testing.</p>
-            <div style={{ display: 'grid', gap: '0.75rem' }}>
-              <button type="button" className="sb-auth-submit" onClick={() => loginAsRole('user')}>
-                Login as User
-              </button>
-              <button type="button" className="sb-auth-submit" onClick={() => loginAsRole('admin')}>
-                Login as Admin
-              </button>
-              <button
-                type="button"
-                className="sb-forgot-return"
-                onClick={() => setPage('forgot-password')}
-              >
-                Forgot Password
-              </button>
-            </div>
-          </section>
-        </div>
+        <LoginPage
+          onBack={() => setPage('landing')}
+          onLogin={handleLogin}
+          onRegister={handleRegister}
+          onForgotPassword={() => setPage('forgot-password')}
+        />
       </>
     );
   }
