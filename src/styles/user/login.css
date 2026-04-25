@@ -3,10 +3,24 @@
 .sb-auth-page {
   min-height: 100vh;
   padding: 1rem;
-  background:
+  background-image:
+    repeating-linear-gradient(
+      45deg,
+      rgba(26, 58, 95, 0.06) 0px,
+      rgba(26, 58, 95, 0.06) 1px,
+      transparent 1px,
+      transparent 28px
+    ),
+    repeating-linear-gradient(
+      -45deg,
+      rgba(26, 58, 95, 0.06) 0px,
+      rgba(26, 58, 95, 0.06) 1px,
+      transparent 1px,
+      transparent 28px
+    ),
     radial-gradient(circle at 15% 10%, rgba(178, 43, 15, 0.08), transparent 38%),
-    radial-gradient(circle at 82% 30%, rgba(26, 58, 95, 0.08), transparent 40%),
-    #fcf9ef;
+    radial-gradient(circle at 82% 30%, rgba(26, 58, 95, 0.08), transparent 40%);
+  background-color: #fcf9ef;
   font-family: 'Public Sans', sans-serif;
   display: flex;
   align-items: center;

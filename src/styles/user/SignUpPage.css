@@ -3,7 +3,22 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	background: linear-gradient(135deg, #6c9bcf 0%, #5a82b8 45%, #1b9c85 100%);
+	background-image:
+		repeating-linear-gradient(
+			45deg,
+			rgba(255, 255, 255, 0.08) 0px,
+			rgba(255, 255, 255, 0.08) 1px,
+			transparent 1px,
+			transparent 28px
+		),
+		repeating-linear-gradient(
+			-45deg,
+			rgba(255, 255, 255, 0.08) 0px,
+			rgba(255, 255, 255, 0.08) 1px,
+			transparent 1px,
+			transparent 28px
+		),
+		linear-gradient(135deg, #6c9bcf 0%, #5a82b8 45%, #1b9c85 100%);
 	padding: 2rem 1rem;
 	font-family: 'Poppins', sans-serif;
 }
