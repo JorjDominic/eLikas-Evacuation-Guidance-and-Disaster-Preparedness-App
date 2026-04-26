@@ -1,18 +1,27 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { supabase } from '../../config/supabase';
 import '../../styles/shared/sentinel.css';
 
 function GuidesPage() {
-	const guides = [
-		{ title: 'Typhoon Readiness', summary: 'Prepare kits, secure windows, and monitor advisories.' },
-		{ title: 'Flood Safety', summary: 'Move to higher ground and avoid crossing floodwaters.' },
-		{ title: 'Earthquake Response', summary: 'Drop, cover, and hold on until shaking stops.' }
-	];
+	const [guides, setGuides] = useState([]);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState('');
 
-	const routes = [
-		{ path: 'Malolos North Route', eta: '8 mins', note: 'Low congestion' },
-		{ path: 'Bocaue East Route', eta: '12 mins', note: 'Road narrowing near bridge' },
-		{ path: 'SJDM West Route', eta: '16 mins', note: 'Monitor traffic at junction' }
-	];
+	useEffect(() => {
+		async function fetchGuides() {
+			const { data, error: err } = await supabase
+				.from('guides')
+				.select('*')
+				.order('created_at', { ascending: false });
+			if (err) setError(err.message);
+			else setGuides(data || []);
+			setLoading(false);
+		}
+		fetchGuides();
+	}, []);
+
+	const typeGuides = guides.filter((g) => g.type === 'Guide');
+	const typeRoutes = guides.filter((g) => g.type === 'Route');
 
 	return (
 		<section className="app-page">
@@ -37,30 +46,40 @@ function GuidesPage() {
 					</div>
 				</div>
 
-				<h2 className="section-title">Preparedness Guides</h2>
-				<div className="soft-grid" style={{ marginBottom: '0.9rem' }}>
-					{guides.map((guide) => (
-						<div key={guide.title} className="soft-card">
-							<h3>{guide.title}</h3>
-							<p>{guide.summary}</p>
-							<button type="button" className="btn-inline">Read Guide</button>
-						</div>
-					))}
-				</div>
+				{loading && <p>Loading guides…</p>}
+				{error && <p style={{ color: 'var(--color-danger, red)' }}>{error}</p>}
 
-				<h2 className="section-title">Evacuation Routes</h2>
-				<div className="soft-grid">
-					{routes.map((route) => (
-						<div key={route.path} className="soft-card">
-							<h4>{route.path}</h4>
-							<p>Estimated Time: {route.eta}</p>
-							<small>{route.note}</small>
-							<div className="action-row" style={{ marginTop: '0.55rem' }}>
-								<button type="button" className="btn-inline">Open Route</button>
+				{!loading && !error && (
+					<>
+						<h2 className="section-title">Preparedness Guides</h2>
+						{typeGuides.length === 0 ? (
+							<p>No guides available yet.</p>
+						) : (
+							<div className="soft-grid" style={{ marginBottom: '0.9rem' }}>
+								{typeGuides.map((guide) => (
+									<div key={guide.id} className="soft-card">
+										<h3>{guide.title}</h3>
+										{guide.content && <p>{guide.content}</p>}
+									</div>
+								))}
 							</div>
-						</div>
-					))}
-				</div>
+						)}
+
+						<h2 className="section-title">Evacuation Routes</h2>
+						{typeRoutes.length === 0 ? (
+							<p>No routes available yet.</p>
+						) : (
+							<div className="soft-grid">
+								{typeRoutes.map((route) => (
+									<div key={route.id} className="soft-card">
+										<h4>{route.title}</h4>
+										{route.content && <p>{route.content}</p>}
+									</div>
+								))}
+							</div>
+						)}
+					</>
+				)}
 			</div>
 		</section>
 	);

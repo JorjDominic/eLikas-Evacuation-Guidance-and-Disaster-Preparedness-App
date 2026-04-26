@@ -1,7 +1,7 @@
 import React from 'react';
 import '../../styles/shared/sentinel.css';
 
-function DashboardPage({ user, onLogout }) {
+function DashboardPage({ user, onNavigate }) {
 	const stats = [
 		{ label: 'Active Alerts', value: 3, tone: 'danger' },
 		{ label: 'Nearby Centers', value: 6, tone: 'primary' },
@@ -55,10 +55,10 @@ function DashboardPage({ user, onLogout }) {
 					<div className="card" style={{ gridColumn: 'span 5' }}>
 						<h2>Quick Actions</h2>
 						<div className="action-row">
-							<button type="button" className="btn-inline primary">Find Center</button>
-							<button type="button" className="btn-inline">View Alerts</button>
-							<button type="button" className="btn-inline">Open Guides</button>
-							<button type="button" className="btn-inline danger">Report Hazard</button>
+							<button type="button" className="btn-inline primary" onClick={() => onNavigate('centers')}>Find Center</button>
+							<button type="button" className="btn-inline" onClick={() => onNavigate('alerts')}>View Alerts</button>
+							<button type="button" className="btn-inline" onClick={() => onNavigate('guides')}>Open Guides</button>
+							<button type="button" className="btn-inline danger" onClick={() => onNavigate('hazard-report')}>Report Hazard</button>
 						</div>
 						<div className="tag-cluster">
 							<span className="ghost-tag">Flood</span>

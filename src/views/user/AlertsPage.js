@@ -1,12 +1,24 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { supabase } from '../../config/supabase';
 import '../../styles/shared/sentinel.css';
 
 function AlertsPage() {
-	const alerts = [
-		{ title: 'Typhoon Alert: Signal No. 3', area: 'Bulacan North', time: '10 minutes ago', level: 'high' },
-		{ title: 'Flood Warning', area: 'Angat spillway area', time: '35 minutes ago', level: 'medium' },
-		{ title: 'Heat Advisory', area: 'Province-wide', time: '2 hours ago', level: 'low' }
-	];
+	const [alerts, setAlerts] = useState([]);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState('');
+
+	useEffect(() => {
+		async function fetchAlerts() {
+			const { data, error: err } = await supabase
+				.from('alerts')
+				.select('*')
+				.order('created_at', { ascending: false });
+			if (err) setError(err.message);
+			else setAlerts(data || []);
+			setLoading(false);
+		}
+		fetchAlerts();
+	}, []);
 
 	return (
 		<section className="app-page">
@@ -20,17 +32,22 @@ function AlertsPage() {
 					</div>
 				</div>
 
+				{loading && <p>Loading alerts…</p>}
+				{error && <p style={{ color: 'var(--color-danger, red)' }}>{error}</p>}
+				{!loading && !error && alerts.length === 0 && (
+					<p>No active alerts at this time.</p>
+				)}
+
 				<div className="alert-feed">
 					{alerts.map((alert) => (
-						<article key={alert.title} className="alert-row">
+						<article key={alert.id} className="alert-row">
 							<div>
 								<h3>{alert.title}</h3>
 								<p><strong>Affected Area:</strong> {alert.area}</p>
-								<small>{alert.time}</small>
+								<small>{new Date(alert.created_at).toLocaleString()}</small>
 							</div>
 							<div className="action-row">
 								<span className={`status-pill ${alert.level}`}>{alert.level}</span>
-								<button type="button" className="btn-inline">View Details</button>
 							</div>
 						</article>
 					))}

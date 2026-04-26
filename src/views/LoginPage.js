@@ -23,6 +23,18 @@ function LoginPage({ onBack, onLogin, onRegister, onForgotPassword }) {
     event.preventDefault();
     setMessage('');
     setError('');
+
+    if (!loginForm.email.trim() || !loginForm.password) {
+      setError('Please enter your email and password.');
+      return;
+    }
+
+    const validEmail = /^\S+@\S+\.\S+$/.test(loginForm.email.trim());
+    if (!validEmail) {
+      setError('Please enter a valid email address.');
+      return;
+    }
+
     setLoading(true);
 
     const result = await onLogin(loginForm);
@@ -38,6 +50,22 @@ function LoginPage({ onBack, onLogin, onRegister, onForgotPassword }) {
     event.preventDefault();
     setMessage('');
     setError('');
+
+    if (!registerForm.name.trim() || !registerForm.email.trim() || !registerForm.password || !registerForm.confirmPassword) {
+      setError('Please fill in all fields.');
+      return;
+    }
+
+    if (registerForm.password.length < 8) {
+      setError('Password must be at least 8 characters.');
+      return;
+    }
+
+    if (registerForm.password !== registerForm.confirmPassword) {
+      setError('Passwords do not match.');
+      return;
+    }
+
     setLoading(true);
 
     const result = await onRegister(registerForm);

@@ -16,11 +16,13 @@ import AdminGuidesPage from './views/admin/AdminGuidesPage';
 import AdminReportsPage from './views/admin/AdminReportsPage';
 import AppTopNav from './views/AppTopNav';
 import ThemeToggleButton from './views/ThemeToggleButton';
+import ResetPasswordPage from './views/ResetPasswordPage';
 
 function App() {
   const [page, setPage] = React.useState('landing');
   const [currentUser, setCurrentUser] = React.useState(null);
   const [authLoading, setAuthLoading] = React.useState(true);
+  const [selectedCenterId, setSelectedCenterId] = React.useState(null);
   const [theme, setTheme] = React.useState(() => {
     const savedTheme = window.localStorage.getItem('elikas-theme');
     if (savedTheme === 'light' || savedTheme === 'dark') {
@@ -52,6 +54,8 @@ function App() {
         setAuthLoading(false);
       } else if (event === 'SIGNED_IN') {
         if (session?.user) redirectByRole(session.user);
+      } else if (event === 'PASSWORD_RECOVERY') {
+        setPage('reset-password');
       } else if (event === 'SIGNED_OUT') {
         setCurrentUser(null);
         setPage('landing');
@@ -78,6 +82,10 @@ function App() {
 
     if (!name.trim() || !email.trim() || !password || !confirmPassword) {
       return { success: false, message: 'Please fill in all fields.' };
+    }
+
+    if (password.length < 8) {
+      return { success: false, message: 'Password must be at least 8 characters.' };
     }
 
     if (password !== confirmPassword) {
@@ -128,7 +136,6 @@ function App() {
   const userNavItems = [
     { key: 'dashboard', label: 'Dashboard' },
     { key: 'centers', label: 'Centers' },
-    { key: 'center-detail', label: 'Center Detail' },
     { key: 'alerts', label: 'Alerts' },
     { key: 'guides', label: 'Guides' },
     { key: 'hazard-report', label: 'Report Hazard' }
@@ -145,11 +152,11 @@ function App() {
   const renderPage = () => {
     switch (page) {
       case 'dashboard':
-        return <DashboardPage user={currentUser} onLogout={handleLogout} />;
+        return <DashboardPage user={currentUser} onNavigate={setPage} />;
       case 'centers':
-        return <CentersPage />;
+        return <CentersPage onSelectCenter={(id) => { setSelectedCenterId(id); setPage('center-detail'); }} />;
       case 'center-detail':
-        return <CenterDetailPage />;
+        return <CenterDetailPage centerId={selectedCenterId} onBack={() => setPage('centers')} />;
       case 'alerts':
         return <AlertsPage />;
       case 'guides':
@@ -166,8 +173,10 @@ function App() {
         return <AdminGuidesPage />;
       case 'admin-reports':
         return <AdminReportsPage />;
+      case 'reset-password':
+        return <ResetPasswordPage onDone={() => setPage('landing')} />;
       default:
-        return null;
+        return <div style={{ padding: '2rem', textAlign: 'center' }}><h2>Page not found.</h2></div>;
     }
   };
 

@@ -1,12 +1,35 @@
-import React from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { supabase } from '../../config/supabase';
 import '../../styles/shared/sentinel.css';
 
 function AdminReportsPage() {
-	const reports = [
-		{ id: 'RPT-001', issue: 'Flooded Underpass', location: 'Bocaue', status: 'Pending' },
-		{ id: 'RPT-002', issue: 'Blocked Access Road', location: 'Malolos', status: 'Approved' },
-		{ id: 'RPT-003', issue: 'Power Line Hazard', location: 'SJDM', status: 'Pending' }
-	];
+	const [reports, setReports] = useState([]);
+	const [loading, setLoading] = useState(true);
+	const [error, setError] = useState('');
+
+	const fetchReports = useCallback(async () => {
+		setLoading(true);
+		const { data, error: err } = await supabase
+			.from('hazard_reports')
+			.select('*')
+			.order('created_at', { ascending: false });
+		if (err) setError(err.message);
+		else setReports(data || []);
+		setLoading(false);
+	}, []);
+
+	useEffect(() => { fetchReports(); }, [fetchReports]);
+
+	const updateStatus = async (id, status) => {
+		const { error: err } = await supabase
+			.from('hazard_reports')
+			.update({ status })
+			.eq('id', id);
+		if (err) { setError(err.message); return; }
+		await fetchReports();
+	};
+
+	const pendingCount = reports.filter((r) => r.status === 'pending').length;
 
 	return (
 		<section className="app-page">
@@ -31,37 +54,67 @@ function AdminReportsPage() {
 					</div>
 					<div className="subtle-card" style={{ gridColumn: 'span 4' }}>
 						<h3>Pending Validation</h3>
-						<p>12 reports awaiting location confirmation.</p>
+						<p>{loading ? '…' : `${pendingCount} report${pendingCount !== 1 ? 's' : ''} awaiting review.`}</p>
 					</div>
 				</div>
 
-				<div className="table-shell card">
-				<table>
-					<thead>
-						<tr>
-							<th>ID</th>
-							<th>Issue</th>
-							<th>Location</th>
-							<th>Status</th>
-							<th>Action</th>
-						</tr>
-					</thead>
-					<tbody>
-						{reports.map((report) => (
-							<tr key={report.id}>
-								<td>{report.id}</td>
-								<td>{report.issue}</td>
-								<td>{report.location}</td>
-								<td><span className={`status-pill ${report.status.toLowerCase()}`}>{report.status}</span></td>
-								<td>
-									<button type="button" className="btn-inline" style={{ marginRight: '0.4rem' }}>Approve</button>
-									<button type="button" className="btn-inline danger">Reject</button>
-								</td>
-							</tr>
-						))}
-					</tbody>
-				</table>
-				</div>
+				{error && <p style={{ color: 'var(--color-danger, red)', marginBottom: '0.75rem' }}>{error}</p>}
+				{loading && <p>Loading reports…</p>}
+
+				{!loading && (
+					<div className="table-shell card">
+						<table>
+							<thead>
+								<tr>
+									<th>Type</th>
+									<th>Location</th>
+									<th>Description</th>
+									<th>Date</th>
+									<th>Status</th>
+									<th>Action</th>
+								</tr>
+							</thead>
+							<tbody>
+								{reports.length === 0 ? (
+									<tr><td colSpan="6" style={{ textAlign: 'center' }}>No reports found.</td></tr>
+								) : (
+									reports.map((report) => (
+										<tr key={report.id}>
+											<td>{report.hazard_type}</td>
+											<td>{report.location}</td>
+											<td>{report.description}</td>
+											<td><small>{new Date(report.created_at).toLocaleDateString()}</small></td>
+											<td><span className={`status-pill ${report.status}`}>{report.status}</span></td>
+											<td>
+												{report.status === 'pending' ? (
+													<>
+														<button
+															type="button"
+															className="btn-inline"
+															style={{ marginRight: '0.4rem' }}
+															onClick={() => updateStatus(report.id, 'approved')}
+														>
+															Approve
+														</button>
+														<button
+															type="button"
+															className="btn-inline danger"
+															onClick={() => updateStatus(report.id, 'rejected')}
+														>
+															Reject
+														</button>
+													</>
+												) : (
+													<span style={{ opacity: 0.5 }}>—</span>
+												)}
+											</td>
+										</tr>
+									))
+								)}
+							</tbody>
+						</table>
+					</div>
+				)}
 			</div>
 		</section>
 	);
