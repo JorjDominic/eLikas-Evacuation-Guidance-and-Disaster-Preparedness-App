@@ -43,10 +43,30 @@
   --sent-progress-track: #263244;
 }
 
+/* ── Keyframe Animations ─────────────────────────────────── */
+
+@keyframes sentinelFadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes sentinelFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
 .app-top-nav {
-  position: sticky;
+  position: fixed;
   top: 0;
-  z-index: 20;
+  left: 0;
+  right: 0;
+  z-index: 9999;
   padding: 0.75rem 0;
   background: var(--sent-nav-bg);
   border-bottom: 1px solid var(--sent-nav-border);
@@ -69,6 +89,18 @@
   color: var(--sent-primary);
   font-size: 1.55rem;
   font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.app-top-nav__logo {
+  display: block;
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  flex-shrink: 0;
+  transform: translateY(-3px);
 }
 
 .app-top-nav__links {
@@ -107,7 +139,9 @@
 }
 
 .app-page {
-  min-height: calc(100vh - 72px);
+  padding-top: calc(72px + 1.35rem);
+  min-height: 100vh;
+  animation: sentinelFadeUp 0.35s ease both;
   background:
     radial-gradient(circle at 8% 20%, rgba(178, 43, 15, 0.06), transparent 35%),
     radial-gradient(circle at 82% 18%, rgba(26, 58, 95, 0.08), transparent 35%),
@@ -725,7 +759,7 @@
 @media (max-width: 768px) {
   /* Switch nav to hamburger */
   .app-top-nav {
-    position: relative;
+    position: sticky;
   }
 
   .app-top-nav__links {

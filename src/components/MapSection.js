@@ -171,6 +171,7 @@ function MapSection() {
   return (
     <section id="map" className="map-section">
       <div className="layout">
+        <span className="section-num">03</span>
         <div className="section-heading">
           <div className="section-eyebrow">Interactive Map</div>
           <h2>Explore &amp; Map Your Area</h2>

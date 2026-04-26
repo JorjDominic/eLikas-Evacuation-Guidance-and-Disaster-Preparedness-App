@@ -1,6 +1,7 @@
 html {
   --app-bg: #f8f7f2;
   --app-text: #1f2937;
+  scroll-behavior: smooth;
 }
 
 html[data-theme='dark'] {

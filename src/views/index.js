@@ -39,7 +39,12 @@ function LandingPage({ onLogin, onRegister }) {
     <div className="view-landing sentinel-theme">
       <header className="top-nav">
         <div className="layout nav-inner">
-          <a className="brand" href="#home">
+          <a
+            className="brand"
+            href="#home"
+            onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
+          >
+            <img src="/elikas icon transparent.png" alt="eLikas logo" className="nav-logo" />
             eLikas Bulacan
           </a>
           <nav className="desktop-links" aria-label="Primary">
@@ -152,6 +157,7 @@ function LandingPage({ onLogin, onRegister }) {
       <main>
         <section id="protocols" className="panel-section">
           <div className="layout">
+            <span className="section-num">01</span>
             <div className="section-heading">
               <h2>Tactical Protocols</h2>
               <p>Built for residents, responders, and barangay operations teams.</p>
@@ -178,6 +184,7 @@ function LandingPage({ onLogin, onRegister }) {
 
         <section id="features" className="feature-section">
           <div className="layout">
+            <span className="section-num">02</span>
             <div className="section-heading">
               <h2>Platform Capabilities</h2>
               <p>Practical tools for faster, safer decisions during emergencies.</p>
@@ -206,6 +213,7 @@ function LandingPage({ onLogin, onRegister }) {
 
         <section className="steps-section">
           <div className="layout">
+            <span className="section-num">04</span>
             <div className="section-heading">
               <h2>Fast Evacuation Sequence</h2>
               <p>Simple actions when an official evacuation notice is issued.</p>

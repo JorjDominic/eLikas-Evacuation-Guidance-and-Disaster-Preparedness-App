@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { supabase } from '../config/supabase';
 import '../styles/user/login.css';
+import '../styles/user/index.css';
 
 function ResetPasswordPage({ onDone }) {
   const [password, setPassword] = useState('');
@@ -43,11 +44,21 @@ function ResetPasswordPage({ onDone }) {
   };
 
   return (
-    <div className="sb-auth-page">
+    <div className="view-landing sentinel-theme sb-auth-page sb-forgot-page">
+
+      {/* ── Nav: identical to landing ── */}
+      <header className="top-nav">
+        <div className="layout nav-inner">
+          <a className="brand" href="#" onClick={(e) => e.preventDefault()}>
+            <img src="/elikas icon transparent.png" alt="eLikas logo" className="nav-logo" />
+            eLikas Bulacan
+          </a>
+        </div>
+      </header>
       <section className="sb-forgot-card">
         <div className="sb-forgot-brand" aria-hidden="true">
           <h1>eLikas Bulacan</h1>
-          <small>Heritage &amp; Resilience</small>
+          <small>Emergency Guidance &amp; Disaster Preparedness</small>
         </div>
 
         <h2>Set New Password</h2>

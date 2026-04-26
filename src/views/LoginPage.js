@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import '../styles/user/login.css';
+import '../styles/user/index.css';
 
 function LoginPage({ onBack, onLogin, onRegister, onForgotPassword }) {
   const [activeTab, setActiveTab] = useState('login');
+  const [menuOpen, setMenuOpen] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -83,44 +85,105 @@ function LoginPage({ onBack, onLogin, onRegister, onForgotPassword }) {
   };
 
   return (
-    <div className="sb-auth-page">
-      <button className="sb-auth-back sb-auth-back-fixed" onClick={onBack} aria-label="Back to landing">
-        <span aria-hidden="true">&#8592;</span>
-      </button>
+    <div className="view-landing sentinel-theme sb-auth-page">
 
-      <div className="sb-auth-panel">
-        <section className="sb-auth-brand">
-          <h1>eLikas Bulacan</h1>
-          <p>
-            Standing watch over the heritage and safety of Bulakenyos.
-            A legacy of resilience, powered by tactical readiness.
-          </p>
+      {/* ── Nav: identical to landing ── */}
+      <header className="top-nav">
+        <div className="layout nav-inner">
+          <a className="brand" href="#" onClick={(e) => { e.preventDefault(); onBack(); }}>
+            <img src="/elikas icon transparent.png" alt="eLikas logo" className="nav-logo" />
+            eLikas Bulacan
+          </a>
+          <div className="nav-actions">
+            <button
+              className={`btn ghost${activeTab === 'login' ? ' sb-nav-active' : ''}`}
+              onClick={() => setActiveTab('login')}
+            >Login</button>
+            <button
+              className={`btn solid${activeTab === 'register' ? ' sb-nav-active' : ''}`}
+              onClick={() => setActiveTab('register')}
+            >Register</button>
+          </div>
+          <button
+            className="nav-hamburger"
+            aria-label="Toggle menu"
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen(o => !o)}
+          >
+            <span /><span /><span />
+          </button>
+        </div>
+        {menuOpen && (
+          <div className="nav-mobile-menu">
+            <button className="nav-mobile-link" onClick={() => { setActiveTab('login'); setMenuOpen(false); }}>Login</button>
+            <button className="nav-mobile-link" onClick={() => { setActiveTab('register'); setMenuOpen(false); }}>Register</button>
+          </div>
+        )}
+      </header>
 
-   
+      {/* ── Main content ── */}
+      <div className="sb-auth-wrap">
 
-          <div className="sb-auth-brand-image" aria-hidden="true" />
-        </section>
+        {/* Left decorative column */}
+        <aside className="sb-auth-aside">
+          <div className="sb-aside-inner">
+            <div className="sb-aside-badge">
+              <span className="sb-live-dot" />
+              System Active
+            </div>
+            <h2 className="sb-aside-headline">
+              Preparedness<br />that reaches<br /><em>every barangay.</em>
+            </h2>
+            <p className="sb-aside-sub">
+              Access live evacuation centers, flood advisories, and emergency guides — all in one place.
+            </p>
+            <div className="sb-aside-stats">
+              <div className="sb-stat-chip">
+                <span className="sb-stat-num">24</span>
+                <span className="sb-stat-lbl">Evacuation Centers</span>
+              </div>
+              <div className="sb-stat-chip">
+                <span className="sb-stat-num">21</span>
+                <span className="sb-stat-lbl">Municipalities</span>
+              </div>
+              <div className="sb-stat-chip">
+                <span className="sb-stat-num">569</span>
+                <span className="sb-stat-lbl">Barangays</span>
+              </div>
+              <div className="sb-stat-chip">
+                <span className="sb-stat-num">24/7</span>
+                <span className="sb-stat-lbl">Monitoring</span>
+              </div>
+            </div>
+            <div className="sb-aside-image" aria-hidden="true" />
+          </div>
+        </aside>
 
+        {/* Right form column */}
         <section className="sb-auth-form-shell">
+
+          {/* Form welcome header */}
+          <div className="sb-form-header">
+            <img src="/elikas icon transparent.png" alt="" className="sb-form-logo" aria-hidden="true" />
+            <div>
+              <h3 className="sb-form-title">eLikas Bulacan</h3>
+              <p className="sb-form-subtitle">Emergency Guidance &amp; Disaster Preparedness System</p>
+            </div>
+          </div>
+
           <div className="sb-tab-switch" role="tablist" aria-label="Authentication mode">
             <button
-              type="button"
-              role="tab"
+              type="button" role="tab"
               className={activeTab === 'login' ? 'sb-tab-btn active' : 'sb-tab-btn'}
               onClick={() => setActiveTab('login')}
               aria-selected={activeTab === 'login'}
-            >
-              Log-in
-            </button>
+            >Log-in</button>
             <button
-              type="button"
-              role="tab"
+              type="button" role="tab"
               className={activeTab === 'register' ? 'sb-tab-btn active' : 'sb-tab-btn'}
               onClick={() => setActiveTab('register')}
               aria-selected={activeTab === 'register'}
-            >
-              Sign-up
-            </button>
+            >Sign-up</button>
           </div>
 
           {error && <div className="sb-auth-error">{error}</div>}
@@ -130,27 +193,21 @@ function LoginPage({ onBack, onLogin, onRegister, onForgotPassword }) {
             <form className="sb-auth-form" onSubmit={submitLogin}>
               <label htmlFor="sb-login-email">Email / Username</label>
               <input
-                id="sb-login-email"
-                type="email"
+                id="sb-login-email" type="email"
                 placeholder="JuanDelaCruz@bulacan.gov.ph"
                 value={loginForm.email}
-                onChange={(event) => setLoginForm({ ...loginForm, email: event.target.value })}
+                onChange={(e) => setLoginForm({ ...loginForm, email: e.target.value })}
               />
-
               <div className="sb-auth-label-row">
                 <label htmlFor="sb-login-password">Password</label>
-                <button type="button" className="sb-forgot-link" onClick={onForgotPassword}>
-                  Forgot Password?
-                </button>
+                <button type="button" className="sb-forgot-link" onClick={onForgotPassword}>Forgot Password?</button>
               </div>
               <input
-                id="sb-login-password"
-                type="password"
+                id="sb-login-password" type="password"
                 placeholder="••••••••"
                 value={loginForm.password}
-                onChange={(event) => setLoginForm({ ...loginForm, password: event.target.value })}
+                onChange={(e) => setLoginForm({ ...loginForm, password: e.target.value })}
               />
-
               <button type="submit" className="sb-auth-submit" disabled={loading}>
                 {loading ? 'Logging in…' : 'Log-in'}
               </button>
@@ -159,46 +216,39 @@ function LoginPage({ onBack, onLogin, onRegister, onForgotPassword }) {
             <form className="sb-auth-form" onSubmit={submitRegister}>
               <label htmlFor="sb-register-name">Full Name</label>
               <input
-                id="sb-register-name"
-                type="text"
+                id="sb-register-name" type="text"
                 placeholder="Juan Dela Cruz"
                 value={registerForm.name}
-                onChange={(event) => setRegisterForm({ ...registerForm, name: event.target.value })}
+                onChange={(e) => setRegisterForm({ ...registerForm, name: e.target.value })}
               />
-
               <label htmlFor="sb-register-email">Email</label>
               <input
-                id="sb-register-email"
-                type="email"
+                id="sb-register-email" type="email"
                 placeholder="you@example.com"
                 value={registerForm.email}
-                onChange={(event) => setRegisterForm({ ...registerForm, email: event.target.value })}
+                onChange={(e) => setRegisterForm({ ...registerForm, email: e.target.value })}
               />
-
               <label htmlFor="sb-register-password">Password</label>
               <input
-                id="sb-register-password"
-                type="password"
+                id="sb-register-password" type="password"
                 placeholder="••••••••"
                 value={registerForm.password}
-                onChange={(event) => setRegisterForm({ ...registerForm, password: event.target.value })}
+                onChange={(e) => setRegisterForm({ ...registerForm, password: e.target.value })}
               />
-
               <label htmlFor="sb-register-confirm">Confirm Password</label>
               <input
-                id="sb-register-confirm"
-                type="password"
+                id="sb-register-confirm" type="password"
                 placeholder="••••••••"
                 value={registerForm.confirmPassword}
-                onChange={(event) => setRegisterForm({ ...registerForm, confirmPassword: event.target.value })}
+                onChange={(e) => setRegisterForm({ ...registerForm, confirmPassword: e.target.value })}
               />
-
               <button type="submit" className="sb-auth-submit" disabled={loading}>
                 {loading ? 'Creating account…' : 'Create Account'}
               </button>
             </form>
           )}
         </section>
+
       </div>
 
       <footer className="sb-auth-footer">
@@ -209,4 +259,3 @@ function LoginPage({ onBack, onLogin, onRegister, onForgotPassword }) {
 }
 
 export default LoginPage;
-

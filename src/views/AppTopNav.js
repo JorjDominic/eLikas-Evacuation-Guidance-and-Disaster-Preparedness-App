@@ -18,6 +18,7 @@ function AppTopNav({ role, page, items, onNavigate, onLogout }) {
     <nav className={`app-top-nav ${role === 'admin' ? 'admin' : 'user'}`}>
       <div className="app-top-nav__inner">
         <div className="app-top-nav__brand">
+          <img src="/elikas icon transparent.png" alt="eLikas logo" className="app-top-nav__logo" />
           {role === 'admin' ? 'eLikas Command Center' : 'eLikas Responder View'}
         </div>
 

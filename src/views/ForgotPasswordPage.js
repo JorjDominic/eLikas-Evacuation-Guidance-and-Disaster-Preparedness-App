@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import '../styles/user/login.css';
+import '../styles/user/index.css';
 
 function ForgotPasswordPage({ onBackToLogin, onSubmitReset }) {
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const submitReset = async (event) => {
     event.preventDefault();
@@ -25,15 +27,38 @@ function ForgotPasswordPage({ onBackToLogin, onSubmitReset }) {
   };
 
   return (
-    <div className="sb-auth-page sb-forgot-page">
-      <button className="sb-auth-back sb-auth-back-fixed" onClick={onBackToLogin} aria-label="Back to login">
-        <span aria-hidden="true">&#8592;</span>
-      </button>
+    <div className="view-landing sentinel-theme sb-auth-page sb-forgot-page">
+
+      {/* ── Nav: identical to landing ── */}
+      <header className="top-nav">
+        <div className="layout nav-inner">
+          <a className="brand" href="#" onClick={(e) => { e.preventDefault(); onBackToLogin(); }}>
+            <img src="/elikas icon transparent.png" alt="eLikas logo" className="nav-logo" />
+            eLikas Bulacan
+          </a>
+          <div className="nav-actions">
+            <button type="button" className="btn solid" onClick={onBackToLogin}>Login</button>
+          </div>
+          <button
+            className="nav-hamburger"
+            aria-label="Toggle menu"
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen(o => !o)}
+          >
+            <span /><span /><span />
+          </button>
+        </div>
+        {menuOpen && (
+          <div className="nav-mobile-menu">
+            <button className="nav-mobile-link" onClick={() => { onBackToLogin(); setMenuOpen(false); }}>Login</button>
+          </div>
+        )}
+      </header>
 
       <section className="sb-forgot-card">
         <div className="sb-forgot-brand" aria-hidden="true">
-          <h1>Sentinela Bulacan</h1>
-          <small>Heritage &amp; Resilience</small>
+          <h1>eLikas Bulacan</h1>
+          <small>Emergency Guidance &amp; Disaster Preparedness</small>
         </div>
 
         <h2>Kalimutan ang Password</h2>

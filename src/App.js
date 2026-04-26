@@ -188,12 +188,14 @@ function App() {
     return (
       <>
         <ThemeToggleButton theme={theme} onToggle={handleThemeToggle} />
-        <LoginPage
-          onBack={() => setPage('landing')}
-          onLogin={handleLogin}
-          onRegister={handleRegister}
-          onForgotPassword={() => setPage('forgot-password')}
-        />
+        <div key="auth">
+          <LoginPage
+            onBack={() => setPage('landing')}
+            onLogin={handleLogin}
+            onRegister={handleRegister}
+            onForgotPassword={() => setPage('forgot-password')}
+          />
+        </div>
       </>
     );
   }
@@ -202,10 +204,12 @@ function App() {
     return (
       <>
         <ThemeToggleButton theme={theme} onToggle={handleThemeToggle} />
-        <ForgotPasswordPage
-          onBackToLogin={() => setPage('auth')}
-          onSubmitReset={handleForgotPassword}
-        />
+        <div key="forgot-password">
+          <ForgotPasswordPage
+            onBackToLogin={() => setPage('auth')}
+            onSubmitReset={handleForgotPassword}
+          />
+        </div>
       </>
     );
   }
@@ -235,7 +239,9 @@ function App() {
         onNavigate={setPage}
         onLogout={handleLogout}
       />
-      {renderPage()}
+      <div key={page}>
+        {renderPage()}
+      </div>
     </div>
   );
 }
