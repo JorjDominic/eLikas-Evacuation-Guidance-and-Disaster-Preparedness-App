@@ -129,6 +129,74 @@
   background: rgba(26, 58, 95, 0.07);
 }
 
+/* ─── Hamburger button ───────────────────────────────── */
+.view-landing .nav-hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  background: transparent;
+  border: 1.5px solid var(--line);
+  border-radius: var(--radius-md);
+  padding: 0.4rem 0.5rem;
+  cursor: pointer;
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+}
+
+.view-landing .nav-hamburger span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: var(--text);
+  border-radius: 999px;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+/* ─── Mobile dropdown menu ───────────────────────────── */
+.view-landing .nav-mobile-menu {
+  background: var(--top-nav-bg);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-bottom: 1px solid var(--top-nav-border);
+  padding: 0.65rem calc((100% - min(1180px, 92vw)) / 2 + 1rem);
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  box-shadow: 0 12px 28px rgba(26, 58, 95, 0.12);
+}
+
+.view-landing .nav-mobile-link {
+  display: block;
+  padding: 0.7rem 0.9rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--line);
+  background: var(--surface-card);
+  color: var(--text);
+  text-decoration: none;
+  font-size: 0.92rem;
+  font-weight: 600;
+  transition: background 0.15s ease;
+}
+
+.view-landing .nav-mobile-link:hover {
+  background: var(--surface-card-strong);
+  color: var(--primary);
+}
+
+.view-landing .nav-mobile-actions {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 0.25rem;
+}
+
+.view-landing .nav-mobile-actions .btn {
+  flex: 1;
+  text-align: center;
+}
+
 /* ═══════════════════════════════════════════════════════════
    NAV ACTIONS & BUTTONS
 ═══════════════════════════════════════════════════════════ */
@@ -882,6 +950,14 @@
     display: none;
   }
 
+  .view-landing .nav-actions {
+    display: none;
+  }
+
+  .view-landing .nav-hamburger {
+    display: flex;
+  }
+
   .view-landing .stats-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -927,22 +1003,18 @@
 
   .view-landing .nav-inner {
     min-height: 64px;
-    flex-wrap: wrap;
-    padding: 0.75rem 0;
   }
 
   .view-landing .brand {
     font-size: 1.45rem;
   }
 
-  .view-landing .nav-actions,
   .view-landing .hero-ctas,
   .view-landing .cta-actions {
     width: 100%;
     justify-content: stretch;
   }
 
-  .view-landing .nav-actions .btn,
   .view-landing .hero-ctas .btn,
   .view-landing .cta-actions .btn {
     flex: 1;

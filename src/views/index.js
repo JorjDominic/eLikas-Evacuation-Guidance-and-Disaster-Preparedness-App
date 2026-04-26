@@ -3,6 +3,10 @@ import '../styles/user/index.css';
 import MapSection from '../components/MapSection';
 
 function LandingPage({ onLogin, onRegister }) {
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const handleNavLink = () => setMenuOpen(false);
+
   const heroImages = [
     'https://sa.kapamilya.com/absnews/abscbnnews/media/2023/news/08/01/20230731-calumpit-bulacan-drone-mt-2.jpg',
     'https://www.rappler.com/tachyon/2025/07/flooding-habagat-typhoon-emong-calumpit-bulacan-july-25-2025-001-scaled.jpg',
@@ -48,7 +52,29 @@ function LandingPage({ onLogin, onRegister }) {
             <button className="btn ghost" onClick={onLogin}>Login</button>
             <button className="btn solid" onClick={onRegister}>Register</button>
           </div>
+          <button
+            className="nav-hamburger"
+            aria-label="Toggle navigation menu"
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((o) => !o)}
+          >
+            <span />
+            <span />
+            <span />
+          </button>
         </div>
+        {menuOpen && (
+          <div className="nav-mobile-menu">
+            <a className="nav-mobile-link" href="#features" onClick={handleNavLink}>Features</a>
+            <a className="nav-mobile-link" href="#map" onClick={handleNavLink}>Map</a>
+            <a className="nav-mobile-link" href="#protocols" onClick={handleNavLink}>Protocols</a>
+            <a className="nav-mobile-link" href="#contact" onClick={handleNavLink}>Contact</a>
+            <div className="nav-mobile-actions">
+              <button className="btn ghost" onClick={() => { setMenuOpen(false); onLogin(); }}>Login</button>
+              <button className="btn solid" onClick={() => { setMenuOpen(false); onRegister(); }}>Register</button>
+            </div>
+          </div>
+        )}
       </header>
 
       
