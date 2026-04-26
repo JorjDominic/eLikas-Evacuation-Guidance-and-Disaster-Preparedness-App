@@ -198,6 +198,32 @@
 	font-family: 'Poppins', sans-serif;
 }
 
+/* ── Modal responsive ── */
+@media (max-width: 600px) {
+  .ac-modal {
+    padding: 1rem;
+  }
+
+  .ac-field-row {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .ac-facilities-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .ac-modal-actions {
+    flex-direction: column-reverse;
+    gap: 0.5rem;
+  }
+
+  .ac-modal-actions .btn-inline {
+    width: 100%;
+    text-align: center;
+  }
+}
+
 .admin-page-wrap {
 	width: min(1100px, 94%);
 	margin: 0 auto;
