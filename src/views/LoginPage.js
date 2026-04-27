@@ -94,6 +94,12 @@ function LoginPage({ onBack, onLogin, onRegister, onForgotPassword }) {
             <img src="/elikas icon transparent.png" alt="eLikas logo" className="nav-logo" />
             eLikas Bulacan
           </a>
+          <nav className="desktop-links" aria-label="Primary">
+            <a href="#features" onClick={(e) => { e.preventDefault(); onBack(); }}>Features</a>
+            <a href="#map" onClick={(e) => { e.preventDefault(); onBack(); }}>Map</a>
+            <a href="#protocols" onClick={(e) => { e.preventDefault(); onBack(); }}>Protocols</a>
+            <a href="#contact" onClick={(e) => { e.preventDefault(); onBack(); }}>Contact</a>
+          </nav>
           <div className="nav-actions">
             <button
               className={`btn ghost${activeTab === 'login' ? ' sb-nav-active' : ''}`}
@@ -115,6 +121,10 @@ function LoginPage({ onBack, onLogin, onRegister, onForgotPassword }) {
         </div>
         {menuOpen && (
           <div className="nav-mobile-menu">
+            <a className="nav-mobile-link" href="#features" onClick={(e) => { e.preventDefault(); onBack(); setMenuOpen(false); }}>Features</a>
+            <a className="nav-mobile-link" href="#map" onClick={(e) => { e.preventDefault(); onBack(); setMenuOpen(false); }}>Map</a>
+            <a className="nav-mobile-link" href="#protocols" onClick={(e) => { e.preventDefault(); onBack(); setMenuOpen(false); }}>Protocols</a>
+            <a className="nav-mobile-link" href="#contact" onClick={(e) => { e.preventDefault(); onBack(); setMenuOpen(false); }}>Contact</a>
             <button className="nav-mobile-link" onClick={() => { setActiveTab('login'); setMenuOpen(false); }}>Login</button>
             <button className="nav-mobile-link" onClick={() => { setActiveTab('register'); setMenuOpen(false); }}>Register</button>
           </div>
@@ -123,6 +133,7 @@ function LoginPage({ onBack, onLogin, onRegister, onForgotPassword }) {
 
       {/* ── Main content ── */}
       <div className="sb-auth-wrap">
+        <div className="sb-auth-card">
 
         {/* Left decorative column */}
         <aside className="sb-auth-aside">
@@ -249,6 +260,7 @@ function LoginPage({ onBack, onLogin, onRegister, onForgotPassword }) {
           )}
         </section>
 
+        </div>
       </div>
 
       <footer className="sb-auth-footer">

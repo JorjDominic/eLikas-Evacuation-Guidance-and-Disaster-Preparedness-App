@@ -26,10 +26,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2.5rem 1rem 3rem;
-  gap: 0;
+  padding: 2rem 1rem;
+  width: 100%;
+}
+
+.sb-auth-card {
+  display: flex;
+  align-items: stretch;
   max-width: 1080px;
-  margin: 0 auto;
   width: 100%;
 }
 
@@ -41,7 +45,6 @@
   background: linear-gradient(155deg, #1a3a5f 0%, #26385a 44%, #1f2d49 100%);
   color: #fcf9ef;
   overflow: hidden;
-  min-height: 560px;
   position: relative;
 }
 
@@ -176,16 +179,9 @@
   border: 1px solid #d8d6cb;
   border-left: none;
   box-shadow: 0 24px 52px rgba(26,58,95,0.12);
-  min-height: 560px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-}
-
-/* ── Content area (centres the panel vertically) ─────────── */
-.sb-auth-page > .sb-forgot-card {
-  margin: 0 auto 2rem;
-  margin-top: calc(68px + 2rem);
 }
 
 .sb-auth-back {
@@ -480,64 +476,35 @@
   flex-direction: column;
 }
 
-.sb-forgot-card {
-  width: min(460px, 94vw);
-  margin: 0 auto;
-  border: 1px solid #d8d6cb;
-  border-radius: 10px;
-  background: #fcf9ef;
-  box-shadow: 0 24px 52px rgba(26, 58, 95, 0.12);
-  padding: 1.45rem;
-}
-
-.sb-forgot-brand {
-  margin-bottom: 0.55rem;
-  border-top: 4px solid #1a3a5f;
-  padding-top: 0.55rem;
-}
-
-.sb-forgot-brand h1 {
-  margin: 0;
-  color: #1a3a5f;
+.sb-forgot-heading {
+  margin: 0 0 0.4rem;
   font-family: 'Newsreader', serif;
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: 700;
-}
-
-.sb-forgot-brand small {
-  color: #50545a;
-  font-style: italic;
-}
-
-.sb-forgot-card h2 {
-  margin: 0.7rem 0 0.35rem;
   color: #1c1c16;
-  font-family: 'Newsreader', serif;
-  font-size: 2rem;
-  font-weight: 700;
 }
 
-.sb-forgot-card p {
-  margin: 0 0 0.85rem;
+.sb-forgot-desc {
+  margin: 0 0 1.2rem;
   color: #50545a;
+  font-size: 0.9rem;
   line-height: 1.6;
 }
 
-.sb-forgot-submit {
-  background: #1a3a5f;
-  transition: background-color 0.2s ease;
-}
-
-.sb-forgot-submit:hover {
-  background: #0f2437;
+.sb-form-divider {
+  border: none;
+  border-top: 1px solid #e2dfd6;
+  margin: 0.75rem 0 1rem;
 }
 
 .sb-forgot-return {
-  margin-top: 0.9rem;
+  display: inline-block;
+  margin-top: 1rem;
   border: none;
   background: transparent;
   color: #1a3a5f;
-  font-weight: 700;
+  font-weight: 600;
+  font-size: 0.88rem;
   cursor: pointer;
   padding: 0;
   transition: color 0.2s ease;
@@ -659,29 +626,18 @@ html[data-theme='dark'] .sb-auth-form label {
   color: #cbd5e1;
 }
 
-html[data-theme='dark'] .sb-forgot-card p {
+html[data-theme='dark'] .sb-forgot-heading {
+  color: #f1f5f9;
+}
+
+html[data-theme='dark'] .sb-forgot-desc {
   color: #cbd5e1;
 }
 
-html[data-theme='dark'] .sb-forgot-card h2 {
-  color: #f1f5f9;
-  font-family: 'Newsreader', serif;
+html[data-theme='dark'] .sb-form-divider {
+  border-top-color: #334155;
 }
 
-html[data-theme='dark'] .sb-auth-footer {
-  color: #9ca3af;
-}
-
-html[data-theme='dark'] .sb-auth-form input {
-  border-bottom-color: #475569;
-  color: #e2e8f0;
-}
-
-html[data-theme='dark'] .sb-auth-form input:focus {
-  border-bottom-color: #93c5fd;
-}
-
-html[data-theme='dark'] .sb-forgot-link,
 html[data-theme='dark'] .sb-forgot-return {
   color: #93c5fd;
   transition: color 0.2s ease;
