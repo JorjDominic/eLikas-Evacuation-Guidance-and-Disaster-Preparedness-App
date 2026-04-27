@@ -7,6 +7,7 @@ function AdminDashboardPage({ user, onLogout }) {
 	const [stats, setStats]           = useState({ users: '—', centers: '—', alerts: '—', pending: '—' });
 	const [pendingReports, setPendingReports] = useState([]);
 	const [loading, setLoading]       = useState(true);
+	const [showSignOutConfirm, setShowSignOutConfirm] = useState(false);
 
 	useEffect(() => {
 		async function loadData() {
@@ -42,6 +43,7 @@ function AdminDashboardPage({ user, onLogout }) {
 	];
 
 	return (
+		<>
 		<section className="app-page">
 			<div className="app-shell">
 				<div className="page-hero">
@@ -55,7 +57,7 @@ function AdminDashboardPage({ user, onLogout }) {
 
 				<div className="app-page-head">
 					<span className="page-chip">Admin Operations</span>
-					<button className="btn-inline danger" onClick={onLogout}>Sign Out</button>
+					<button className="btn-inline danger" onClick={() => setShowSignOutConfirm(true)}>Sign Out</button>
 				</div>
 
 				<div className="metrics-grid">
@@ -113,6 +115,20 @@ function AdminDashboardPage({ user, onLogout }) {
 				</div>
 			</div>
 		</section>
+
+		{showSignOutConfirm && (
+			<div className="sent-modal-overlay" role="alertdialog" aria-modal="true" aria-labelledby="signout-title" onClick={() => setShowSignOutConfirm(false)}>
+				<div className="sent-modal" onClick={(e) => e.stopPropagation()}>
+					<h2 className="sent-modal__title" id="signout-title">Sign out of eLikas?</h2>
+					<p className="sent-modal__body">You'll be returned to the login screen. Any unsaved changes will be lost.</p>
+					<div className="sent-modal__actions">
+						<button className="sent-modal__btn ghost" onClick={() => setShowSignOutConfirm(false)}>Cancel</button>
+						<button className="sent-modal__btn danger" onClick={onLogout}>Sign Out</button>
+					</div>
+				</div>
+			</div>
+		)}
+		</>
 	);
 }
 

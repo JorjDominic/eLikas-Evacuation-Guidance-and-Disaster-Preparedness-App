@@ -726,6 +726,72 @@
   transition: background 0.15s ease;
 }
 
+/* ── Shared Confirmation Modal ──────────────────────────── */
+.sent-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  animation: sentinelFadeIn 0.15s ease both;
+}
+
+@keyframes sentinelFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.sent-modal {
+  background: var(--sent-surface-card);
+  border: 1px solid var(--sent-line);
+  border-radius: var(--sent-radius);
+  box-shadow: var(--sent-shadow);
+  width: min(400px, 96vw);
+  padding: 1.75rem 1.8rem 1.5rem;
+  animation: sentinelFadeUp 0.22s ease both;
+  color: var(--sent-text);
+}
+
+.sent-modal__title {
+  margin: 0 0 0.35rem;
+  font-family: 'Newsreader', serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--sent-text);
+}
+
+.sent-modal__body {
+  margin: 0 0 1.4rem;
+  font-size: 0.9rem;
+  color: var(--sent-text-muted);
+  line-height: 1.55;
+}
+
+.sent-modal__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.sent-modal__btn {
+  border-radius: 10px;
+  padding: 0.48rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Public Sans', sans-serif;
+  transition: background 0.15s, color 0.15s, border-color 0.15s, transform 0.15s;
+  border: 1px solid transparent;
+}
+
+.sent-modal__btn:hover { transform: translateY(-1px); }
+
+.sent-modal__btn.ghost  { background: var(--sent-surface-card); color: var(--sent-text); border-color: var(--sent-line); }
+.sent-modal__btn.danger { background: var(--sent-danger); color: #fff; border-color: var(--sent-danger); }
+
 .app-top-nav__mobile-btn:hover {
   background: var(--sent-surface-soft);
 }

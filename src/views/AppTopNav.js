@@ -3,6 +3,7 @@ import '../styles/shared/sentinel.css';
 
 function AppTopNav({ role, page, items, onNavigate, onLogout }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
 
   const handleNav = (key) => {
     onNavigate(key);
@@ -10,11 +11,17 @@ function AppTopNav({ role, page, items, onNavigate, onLogout }) {
   };
 
   const handleLogout = () => {
-    onLogout();
     setMenuOpen(false);
+    setShowConfirm(true);
+  };
+
+  const confirmLogout = () => {
+    setShowConfirm(false);
+    onLogout();
   };
 
   return (
+    <>
     <nav className={`app-top-nav ${role === 'admin' ? 'admin' : 'user'}`}>
       <div className="app-top-nav__inner">
         <div className="app-top-nav__brand">
@@ -76,6 +83,20 @@ function AppTopNav({ role, page, items, onNavigate, onLogout }) {
         </div>
       )}
     </nav>
+
+    {showConfirm && (
+      <div className="sent-modal-overlay" role="alertdialog" aria-modal="true" aria-labelledby="signout-title" onClick={() => setShowConfirm(false)}>
+        <div className="sent-modal" onClick={(e) => e.stopPropagation()}>
+          <h2 className="sent-modal__title" id="signout-title">Sign out of eLikas?</h2>
+          <p className="sent-modal__body">You'll be returned to the login screen. Any unsaved changes will be lost.</p>
+          <div className="sent-modal__actions">
+            <button className="sent-modal__btn ghost" onClick={() => setShowConfirm(false)}>Cancel</button>
+            <button className="sent-modal__btn danger" onClick={confirmLogout}>Sign Out</button>
+          </div>
+        </div>
+      </div>
+    )}
+    </>
   );
 }
 
