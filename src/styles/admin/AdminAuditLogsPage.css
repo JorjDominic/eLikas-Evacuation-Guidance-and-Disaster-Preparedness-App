@@ -1,0 +1,269 @@
+/* ── Admin Audit Logs Page ─────────────────────────────────────────────── */
+
+/* Filters row */
+.aalp-filters {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.aalp-search {
+  flex: 1;
+  min-width: 180px;
+  padding: 0.5rem 0.8rem;
+  border: 1px solid var(--sent-line);
+  border-radius: 10px;
+  background: var(--sent-surface-card);
+  color: var(--sent-text);
+  font-size: 0.88rem;
+  font-family: 'Public Sans', sans-serif;
+}
+
+.aalp-search:focus { outline: none; border-color: var(--sent-primary); }
+
+.aalp-select {
+  padding: 0.48rem 0.75rem;
+  border: 1px solid var(--sent-line);
+  border-radius: 10px;
+  background: var(--sent-surface-card);
+  color: var(--sent-text);
+  font-size: 0.88rem;
+  font-family: 'Public Sans', sans-serif;
+  cursor: pointer;
+}
+
+.aalp-select:focus { outline: none; border-color: var(--sent-primary); }
+
+.aalp-btn {
+  border-radius: 10px;
+  padding: 0.48rem 0.9rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: 'Public Sans', sans-serif;
+  transition: background 0.15s, color 0.15s, border-color 0.15s, transform 0.15s;
+  border: 1px solid transparent;
+}
+
+.aalp-btn:hover { transform: translateY(-1px); }
+.aalp-btn:disabled { opacity: 0.45; cursor: default; transform: none; }
+
+.aalp-btn.ghost {
+  background: var(--sent-surface-card);
+  color: var(--sent-text);
+  border-color: var(--sent-line);
+}
+
+/* Table */
+.aalp-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.aalp-table th {
+  text-align: left;
+  padding: 0.6rem 0.75rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--sent-text-muted);
+  border-bottom: 1px solid var(--sent-line);
+}
+
+.aalp-table td {
+  padding: 0.65rem 0.75rem;
+  border-bottom: 1px solid var(--sent-line);
+  color: var(--sent-text);
+  vertical-align: middle;
+}
+
+.aalp-row:last-child td { border-bottom: none; }
+.aalp-row:hover { background: var(--sent-surface-soft); }
+.aalp-row.expanded { background: var(--sent-surface-soft); }
+
+.aalp-expanded-row td {
+  padding: 0;
+  border-bottom: 2px solid var(--sent-primary);
+}
+
+.aalp-expanded-inner {
+  padding: 0.75rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  background: var(--sent-surface-soft);
+}
+
+.aalp-expanded-row-data {
+  font-size: 0.82rem;
+  color: var(--sent-text);
+  word-break: break-all;
+}
+
+/* Timestamp */
+.aalp-ts {
+  font-size: 0.8rem;
+  color: var(--sent-text-muted);
+  white-space: nowrap;
+}
+
+/* Actor cell */
+.aalp-actor {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.aalp-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--sent-primary);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-family: 'Public Sans', sans-serif;
+}
+
+/* Action badges */
+.aalp-badge {
+  display: inline-block;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.73rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.aalp-badge.color-blue   { background: #dbeafe; color: #1e40af; }
+.aalp-badge.color-green  { background: #dcfce7; color: #166534; }
+.aalp-badge.color-red    { background: #fee2e2; color: #991b1b; }
+.aalp-badge.color-orange { background: #ffedd5; color: #c2410c; }
+.aalp-badge.color-grey   { background: #f1f5f9; color: #475569; }
+
+:root[data-theme='dark'] .aalp-badge.color-blue   { background: #1e3a5f; color: #93c5fd; }
+:root[data-theme='dark'] .aalp-badge.color-green  { background: #064e3b; color: #6ee7b7; }
+:root[data-theme='dark'] .aalp-badge.color-red    { background: #450a0a; color: #fca5a5; }
+:root[data-theme='dark'] .aalp-badge.color-orange { background: #431407; color: #fb923c; }
+:root[data-theme='dark'] .aalp-badge.color-grey   { background: #1f2937; color: #94a3b8; }
+
+/* Target cell */
+.aalp-target {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.82rem;
+}
+
+.aalp-target-type {
+  font-weight: 700;
+  color: var(--sent-primary);
+  text-transform: capitalize;
+}
+
+.aalp-target-id {
+  color: var(--sent-text-muted);
+  font-family: monospace;
+  font-size: 0.78rem;
+}
+
+/* Meta cell */
+.aalp-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.aalp-meta-pair {
+  font-size: 0.78rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+  display: block;
+}
+
+.aalp-meta-key {
+  font-weight: 600;
+  color: var(--sent-text-muted);
+}
+
+.aalp-meta-val {
+  color: var(--sent-text);
+}
+
+.aalp-meta-empty {
+  color: var(--sent-text-muted);
+  font-style: italic;
+}
+
+/* JSON preformat */
+.aalp-json {
+  margin: 0.35rem 0 0;
+  padding: 0.6rem 0.8rem;
+  background: var(--sent-surface);
+  border: 1px solid var(--sent-line);
+  border-radius: 8px;
+  font-size: 0.78rem;
+  line-height: 1.55;
+  color: var(--sent-text);
+  overflow-x: auto;
+  font-family: 'Courier New', monospace;
+}
+
+/* Empty / loading */
+.aalp-empty {
+  text-align: center;
+  padding: 2.5rem 1rem;
+  color: var(--sent-text-muted);
+  font-style: italic;
+}
+
+.aalp-loading {
+  color: var(--sent-text-muted);
+  padding: 0.5rem 0;
+}
+
+.aalp-error {
+  border: 1px solid #fca5a5;
+  background: #fee2e2;
+  color: #991b1b;
+  border-radius: 10px;
+  padding: 0.65rem 0.9rem;
+  font-size: 0.875rem;
+  margin-bottom: 0.75rem;
+}
+
+:root[data-theme='dark'] .aalp-error {
+  background: #450a0a;
+  border-color: #7f1d1d;
+  color: #fca5a5;
+}
+
+/* Pagination */
+.aalp-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.aalp-page-info {
+  font-size: 0.85rem;
+  color: var(--sent-text-muted);
+}
+
+@media (max-width: 760px) {
+  .aalp-table { display: block; overflow-x: auto; }
+  .aalp-filters { flex-direction: column; align-items: stretch; }
+  .aalp-meta-pair { max-width: 120px; }
+}

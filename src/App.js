@@ -14,12 +14,18 @@ import AdminCentersPage from './views/admin/AdminCentersPage';
 import AdminAlertsPage from './views/admin/AdminAlertsPage';
 import AdminGuidesPage from './views/admin/AdminGuidesPage';
 import AdminReportsPage from './views/admin/AdminReportsPage';
+import AdminUsersPage from './views/admin/AdminUsersPage';
+import AdminAuditLogsPage from './views/admin/AdminAuditLogsPage';
 import AppTopNav from './views/AppTopNav';
 import ThemeToggleButton from './views/ThemeToggleButton';
 import ResetPasswordPage from './views/ResetPasswordPage';
 
 function App() {
   const [page, setPage] = React.useState('landing');
+
+  React.useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, [page]);
   const [currentUser, setCurrentUser] = React.useState(null);
   const [authLoading, setAuthLoading] = React.useState(true);
   const [selectedCenterId, setSelectedCenterId] = React.useState(null);
@@ -38,20 +44,41 @@ function App() {
   }, [theme]);
 
   React.useEffect(() => {
-    const redirectByRole = (user) => {
-      const role =
-        user.user_metadata?.role ||
-        user.app_metadata?.role ||
-        'user';
-      const name = user.user_metadata?.name || user.email;
+    const redirectByRole = async (user) => {
+      // Retry the profiles fetch up to 3 times — the session cookie may not
+      // be propagated to RLS yet on the very first SIGNED_IN event.
+      let profile = null;
+      for (let attempt = 0; attempt < 3; attempt++) {
+        if (attempt > 0) await new Promise((r) => setTimeout(r, 600));
+        const { data } = await supabase
+          .from('profiles')
+          .select('name, role')
+          .eq('id', user.id)
+          .single();
+        if (data) { profile = data; break; }
+      }
+
+      // app_metadata is only writable by service role — trust it above all else.
+      // profiles.role is the normal source of truth for regular users.
+      const appRole  = user.app_metadata?.role;
+      const profRole = profile?.role;
+      const role = appRole === 'admin' || profRole === 'admin'
+        ? 'admin'
+        : (appRole || profRole || user.user_metadata?.role || 'user');
+      const name =
+        profile?.name ||
+        user.user_metadata?.name ||
+        user.email;
+
       setCurrentUser({ name, email: user.email, role });
       setPage(role === 'admin' ? 'admin-dashboard' : 'dashboard');
+      setAuthLoading(false);
     };
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'INITIAL_SESSION') {
         if (session?.user) redirectByRole(session.user);
-        setAuthLoading(false);
+        else setAuthLoading(false);
       } else if (event === 'SIGNED_IN') {
         if (session?.user) redirectByRole(session.user);
       } else if (event === 'PASSWORD_RECOVERY') {
@@ -61,6 +88,12 @@ function App() {
         setPage('landing');
       }
     });
+
+    // Unblock loading if no session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!session) setAuthLoading(false);
+    });
+
     return () => subscription.unsubscribe();
   }, []);
 
@@ -98,6 +131,15 @@ function App() {
       options: { data: { name: name.trim(), role: 'user' } }
     });
     if (error) return { success: false, message: error.message };
+
+    // Ensure profile row exists (handles cases where the trigger didn't fire)
+    if (data.user) {
+      await supabase.from('profiles').upsert({
+        id:   data.user.id,
+        name: name.trim(),
+        role: 'user'
+      }, { onConflict: 'id' });
+    }
 
     if (!data.session) {
       return { success: true, confirmEmail: true };
@@ -146,10 +188,21 @@ function App() {
     { key: 'admin-centers', label: 'Centers' },
     { key: 'admin-alerts', label: 'Alerts' },
     { key: 'admin-guides', label: 'Guides' },
-    { key: 'admin-reports', label: 'Reports' }
+    { key: 'admin-reports', label: 'Reports' },
+    { key: 'admin-users', label: 'Users' },
+    { key: 'admin-audit-logs', label: 'Audit Logs' }
   ];
 
+  const isAdmin = currentUser?.role === 'admin';
+
   const renderPage = () => {
+    // Role guards — redirect if someone lands on the wrong side
+    const adminPage = page.startsWith('admin-');
+    if (adminPage && !isAdmin) return <DashboardPage user={currentUser} onNavigate={setPage} />;
+    if (!adminPage && isAdmin && ['dashboard','centers','center-detail','alerts','guides','hazard-report'].includes(page)) {
+      return <AdminDashboardPage user={currentUser} onLogout={handleLogout} />;
+    }
+
     switch (page) {
       case 'dashboard':
         return <DashboardPage user={currentUser} onNavigate={setPage} />;
@@ -162,7 +215,7 @@ function App() {
       case 'guides':
         return <GuidesPage />;
       case 'hazard-report':
-        return <HazardReportPage />;
+        return <HazardReportPage currentUser={currentUser} />;
       case 'admin-dashboard':
         return <AdminDashboardPage user={currentUser} onLogout={handleLogout} />;
       case 'admin-centers':
@@ -173,6 +226,10 @@ function App() {
         return <AdminGuidesPage />;
       case 'admin-reports':
         return <AdminReportsPage />;
+      case 'admin-users':
+        return <AdminUsersPage currentUser={currentUser} />;
+      case 'admin-audit-logs':
+        return <AdminAuditLogsPage />;
       case 'reset-password':
         return <ResetPasswordPage onDone={() => setPage('landing')} />;
       default:
@@ -226,7 +283,6 @@ function App() {
     );
   }
 
-  const isAdmin = currentUser?.role === 'admin';
   const navItems = isAdmin ? adminNavItems : userNavItems;
 
   return (
@@ -239,7 +295,7 @@ function App() {
         onNavigate={setPage}
         onLogout={handleLogout}
       />
-      <div key={page}>
+      <div key={page} style={{ paddingTop: '62px' }}>
         {renderPage()}
       </div>
     </div>

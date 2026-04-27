@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../config/supabase';
 import '../../styles/shared/sentinel.css';
+import WeatherWidget from '../../components/WeatherWidget';
 
 function AlertsPage() {
 	const [alerts, setAlerts] = useState([]);
@@ -29,6 +30,13 @@ function AlertsPage() {
 					<div className="hero-meta">
 						<span className="hero-pill">LGU + PAGASA Sources</span>
 						<span className="hero-pill">Updated Every 5 Minutes</span>
+					</div>
+				</div>
+
+				{/* Live Weather & Preparedness Risk */}
+				<div className="panel-grid" style={{ marginBottom: '1.25rem' }}>
+					<div style={{ gridColumn: 'span 12' }}>
+						<WeatherWidget />
 					</div>
 				</div>
 

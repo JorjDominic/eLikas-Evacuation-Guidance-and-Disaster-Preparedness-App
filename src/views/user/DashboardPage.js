@@ -1,18 +1,43 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { supabase } from '../../config/supabase';
 import '../../styles/shared/sentinel.css';
+import WeatherWidget from '../../components/WeatherWidget';
 
 function DashboardPage({ user, onNavigate }) {
-	const stats = [
-		{ label: 'Active Alerts', value: 3, tone: 'danger' },
-		{ label: 'Nearby Centers', value: 6, tone: 'primary' },
-		{ label: 'Safe Routes', value: 9, tone: 'success' },
-		{ label: 'Unread Advisories', value: 2, tone: 'warning' }
-	];
+	const [stats, setStats]     = useState({ alerts: '—', centers: '—', routes: '—' });
+	const [recentAlerts, setRecentAlerts] = useState([]);
+	const [topAlert, setTopAlert]         = useState(null);
+	const [syncedAt, setSyncedAt]         = useState('');
+	const [loading, setLoading]           = useState(true);
 
-	const updates = [
-		'Flood advisory in Angat spillway area',
-		'Center capacity updated for Malolos Convention Center',
-		'New typhoon preparedness guide published'
+	useEffect(() => {
+		async function loadData() {
+			const [alertsRes, centersRes, routesRes, recentRes] = await Promise.all([
+				supabase.from('alerts').select('id', { count: 'exact', head: true }),
+				supabase.from('evacuation_centers').select('id', { count: 'exact', head: true }).eq('status', 'open'),
+				supabase.from('evacuation_routes').select('id', { count: 'exact', head: true }).eq('status', 'active'),
+				supabase.from('alerts').select('id, title, level, created_at').order('created_at', { ascending: false }).limit(5)
+			]);
+
+			setStats({
+				alerts:  alertsRes.count  ?? 0,
+				centers: centersRes.count ?? 0,
+				routes:  routesRes.count  ?? 0,
+			});
+
+			const items = recentRes.data || [];
+			setRecentAlerts(items);
+			setTopAlert(items.find((a) => a.level === 'high') || items[0] || null);
+			setSyncedAt(new Date().toLocaleTimeString('en-PH', { hour: '2-digit', minute: '2-digit' }));
+			setLoading(false);
+		}
+		loadData();
+	}, []);
+
+	const metricCards = [
+		{ label: 'Active Alerts',   value: stats.alerts,  tone: 'danger'  },
+		{ label: 'Open Centers',    value: stats.centers, tone: 'primary' },
+		{ label: 'Active Routes',   value: stats.routes,  tone: 'success' },
 	];
 
 	return (
@@ -23,31 +48,35 @@ function DashboardPage({ user, onNavigate }) {
 					<p>Welcome back, {user?.name || 'Resident'}. This board summarizes live conditions, shelter readiness, and the next best actions for your household.</p>
 					<div className="hero-meta">
 						<span className="hero-pill">Bulacan Watch Mode</span>
-						<span className="hero-pill">Data Synced 2 min ago</span>
+						{syncedAt && <span className="hero-pill">Data Synced {syncedAt}</span>}
 						<span className="hero-pill">Response Tier: Advisory</span>
 					</div>
 				</div>
 
 				<div className="app-page-head">
 					<span className="page-chip">Resident Control Panel</span>
-					
 				</div>
 
 				<div className="metrics-grid">
-					{stats.map((item) => (
+					{metricCards.map((item) => (
 						<div key={item.label} className={`metric ${item.tone}`}>
 							<span>{item.label}</span>
-							<strong>{item.value}</strong>
+							<strong>{loading ? '…' : item.value}</strong>
 						</div>
 					))}
 				</div>
 
 				<div className="panel-grid">
 					<div className="card" style={{ gridColumn: 'span 7' }}>
-						<h2>Recent Situation Updates</h2>
+						<h2>Recent Alerts</h2>
+						{loading && <p>Loading…</p>}
+						{!loading && recentAlerts.length === 0 && <p>No active alerts at this time.</p>}
 						<ul className="item-list">
-							{updates.map((update) => (
-								<li key={update}>{update}</li>
+							{recentAlerts.map((a) => (
+								<li key={a.id} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+									<span className={`status-pill ${a.level}`}>{a.level}</span>
+									{a.title}
+								</li>
 							))}
 						</ul>
 					</div>
@@ -68,16 +97,25 @@ function DashboardPage({ user, onNavigate }) {
 					</div>
 				</div>
 
-				<div className="sub-grid" style={{ marginTop: '0.9rem' }}>
-					<div className="subtle-card" style={{ gridColumn: 'span 8' }}>
-						<h3>Priority Advisory</h3>
-						<p>Families near riverbanks in Hagonoy and Calumpit are advised to prepare transport options before 8:00 PM due to possible spillway discharge.</p>
-					</div>
-					<div className="subtle-card" style={{ gridColumn: 'span 4' }}>
-						<h3>Response Tip</h3>
-						<p>Charge devices now and assign one family contact to monitor verified announcements.</p>
+				{/* Weather Forecast & Preparedness */}
+				<div className="panel-grid" style={{ marginTop: '0.9rem' }}>
+					<div style={{ gridColumn: 'span 12' }}>
+						<WeatherWidget />
 					</div>
 				</div>
+
+				{topAlert && (
+					<div className="sub-grid" style={{ marginTop: '0.9rem' }}>
+						<div className="subtle-card" style={{ gridColumn: 'span 8' }}>
+							<h3>Priority Advisory</h3>
+							<p>{topAlert.title}</p>
+						</div>
+						<div className="subtle-card" style={{ gridColumn: 'span 4' }}>
+							<h3>Response Tip</h3>
+							<p>Charge devices now and assign one family contact to monitor verified announcements.</p>
+						</div>
+					</div>
+				)}
 			</div>
 		</section>
 	);

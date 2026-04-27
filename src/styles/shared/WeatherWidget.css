@@ -1,0 +1,444 @@
+/* ── Weather Widget ──────────────────────────────────────────────────────── */
+
+.ww-card {
+  background: var(--sent-surface-card);
+  border: 1px solid var(--sent-line);
+  border-radius: var(--sent-radius);
+  padding: 1.25rem 1.4rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  font-family: 'Public Sans', sans-serif;
+  color: var(--sent-text);
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--sent-shadow);
+}
+
+/* Risk-tinted top border */
+.ww-card.risk-none     { border-top: 3px solid #22c55e; }
+.ww-card.risk-low      { border-top: 3px solid #3b82f6; }
+.ww-card.risk-medium   { border-top: 3px solid #f97316; }
+.ww-card.risk-high     { border-top: 3px solid #ef4444; }
+.ww-card.risk-critical { border-top: 3px solid #7c3aed; }
+
+/* ── Header ────────────────────────────────────────────────── */
+.ww-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.ww-location {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--sent-primary);
+  flex-wrap: wrap;
+}
+
+.ww-gps-badge {
+  display: inline-block;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: #dcfce7;
+  color: #166534;
+  border-radius: 999px;
+  padding: 0.1rem 0.45rem;
+  line-height: 1.4;
+}
+
+:root[data-theme='dark'] .ww-gps-badge {
+  background: #052e16;
+  color: #4ade80;
+}
+
+.ww-gps-request {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--sent-primary);
+  background: none;
+  border: 1px solid var(--sent-primary);
+  border-radius: 999px;
+  padding: 0.1rem 0.5rem;
+  cursor: pointer;
+  font-family: 'Public Sans', sans-serif;
+  transition: background 0.15s, color 0.15s;
+  line-height: 1.4;
+}
+
+.ww-gps-request:hover {
+  background: var(--sent-primary);
+  color: #fff;
+}
+
+.ww-loc-icon {
+  font-size: 1rem;
+  vertical-align: middle;
+}
+
+.ww-header-right {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.ww-updated {
+  font-size: 0.75rem;
+  color: var(--sent-text-muted);
+}
+
+.ww-refresh {
+  border: 1px solid var(--sent-line);
+  background: var(--sent-surface);
+  color: var(--sent-text-muted);
+  border-radius: 8px;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s, transform 0.15s;
+}
+
+.ww-refresh:hover {
+  background: var(--sent-surface-soft);
+  transform: rotate(180deg);
+}
+
+/* ── Current conditions ────────────────────────────────────── */
+.ww-current {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.ww-main-temp {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.ww-icon {
+  font-size: 3rem;
+  line-height: 1;
+}
+
+.ww-temp {
+  display: block;
+  font-family: 'Newsreader', serif;
+  font-size: 2.4rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--sent-text);
+}
+
+.ww-condition {
+  display: block;
+  font-size: 0.88rem;
+  color: var(--sent-text-muted);
+  margin-top: 0.2rem;
+}
+
+.ww-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.45rem 1.2rem;
+  flex: 1;
+}
+
+.ww-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.ww-stat-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--sent-text-muted);
+}
+
+.ww-stat-val {
+  font-size: 0.93rem;
+  font-weight: 600;
+  color: var(--sent-text);
+}
+
+/* ── Risk banner ───────────────────────────────────────────── */
+.ww-risk-banner {
+  border-radius: 10px;
+  padding: 0.7rem 1rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+}
+
+.risk-bg-none     { background: rgba(34,197,94,0.1);  border: 1px solid rgba(34,197,94,0.25); }
+.risk-bg-low      { background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.25); }
+.risk-bg-medium   { background: rgba(249,115,22,0.1); border: 1px solid rgba(249,115,22,0.25); }
+.risk-bg-high     { background: rgba(239,68,68,0.1);  border: 1px solid rgba(239,68,68,0.25); }
+.risk-bg-critical { background: rgba(124,58,237,0.1); border: 1px solid rgba(124,58,237,0.25); }
+
+.ww-risk-left {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex-shrink: 0;
+}
+
+.ww-risk-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--sent-text-muted);
+}
+
+.ww-risk-pill {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
+.risk-pill-none     { background: #dcfce7; color: #166534; }
+.risk-pill-low      { background: #dbeafe; color: #1e40af; }
+.risk-pill-medium   { background: #ffedd5; color: #c2410c; }
+.risk-pill-high     { background: #fee2e2; color: #991b1b; }
+.risk-pill-critical { background: #ede9fe; color: #5b21b6; }
+
+:root[data-theme='dark'] .risk-pill-none     { background: #052e16; color: #4ade80; }
+:root[data-theme='dark'] .risk-pill-low      { background: #0f2044; color: #93c5fd; }
+:root[data-theme='dark'] .risk-pill-medium   { background: #431407; color: #fb923c; }
+:root[data-theme='dark'] .risk-pill-high     { background: #450a0a; color: #fca5a5; }
+:root[data-theme='dark'] .risk-pill-critical { background: #2e1065; color: #c4b5fd; }
+
+.ww-risk-advice {
+  margin: 0;
+  font-size: 0.84rem;
+  color: var(--sent-text);
+  line-height: 1.55;
+  flex: 1;
+}
+
+/* ── Preparedness tips ─────────────────────────────────────── */
+.ww-tips {
+  border-top: 1px solid var(--sent-line);
+  padding-top: 0.8rem;
+}
+
+.ww-tips-title {
+  margin: 0 0 0.5rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--sent-text);
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.ww-tips-title .material-symbols-outlined {
+  font-size: 1.1rem;
+  color: var(--sent-primary);
+}
+
+.ww-tips-list {
+  margin: 0;
+  padding: 0 0 0 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.ww-tips-list li {
+  font-size: 0.84rem;
+  color: var(--sent-text);
+  line-height: 1.5;
+}
+
+/* ── 7-day forecast ────────────────────────────────────────── */
+.ww-forecast {
+  border-top: 1px solid var(--sent-line);
+  padding-top: 0.8rem;
+}
+
+.ww-forecast-title {
+  margin: 0 0 0.6rem;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--sent-text);
+}
+
+.ww-forecast-strip {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-bottom: 0.25rem;
+  scrollbar-width: thin;
+}
+
+.ww-day-card {
+  flex: 1;
+  min-width: 80px;
+  background: var(--sent-surface-soft);
+  border: 1px solid var(--sent-line);
+  border-radius: 10px;
+  padding: 0.55rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  text-align: center;
+  transition: background 0.15s;
+}
+
+.ww-day-card:hover { background: var(--sent-surface-card); }
+
+/* Subtle risk tint on day cards */
+.risk-day-medium   { border-top: 2px solid #f97316; }
+.risk-day-high     { border-top: 2px solid #ef4444; }
+.risk-day-critical { border-top: 2px solid #7c3aed; }
+
+.ww-day-name {
+  font-size: 0.73rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--sent-text-muted);
+}
+
+.ww-day-icon { font-size: 1.4rem; line-height: 1; }
+
+.ww-day-temps {
+  display: flex;
+  gap: 0.25rem;
+  align-items: baseline;
+}
+
+.ww-day-hi {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--sent-text);
+}
+
+.ww-day-lo {
+  font-size: 0.75rem;
+  color: var(--sent-text-muted);
+}
+
+.ww-day-precip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.05rem;
+  font-size: 0.72rem;
+  color: var(--sent-text-muted);
+}
+
+.ww-day-mm {
+  font-size: 0.68rem;
+}
+
+/* ── Compact strip ─────────────────────────────────────────── */
+.ww-forecast-compact {
+  display: flex;
+  gap: 0.4rem;
+  overflow-x: auto;
+  border-top: 1px solid var(--sent-line);
+  padding-top: 0.75rem;
+}
+
+.ww-compact-day {
+  flex: 1;
+  min-width: 56px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  text-align: center;
+}
+
+.ww-compact-name { font-size: 0.68rem; font-weight: 700; color: var(--sent-text-muted); text-transform: uppercase; }
+.ww-compact-icon { font-size: 1.1rem; }
+.ww-compact-temp { font-size: 0.82rem; font-weight: 700; color: var(--sent-text); }
+.ww-compact-rain { font-size: 0.68rem; color: var(--sent-text-muted); }
+
+/* ── Source line ───────────────────────────────────────────── */
+.ww-source {
+  margin: 0;
+  font-size: 0.68rem;
+  color: var(--sent-text-muted);
+  text-align: right;
+  border-top: 1px solid var(--sent-line);
+  padding-top: 0.5rem;
+}
+
+/* ── Loading / error states ────────────────────────────────── */
+.ww-loading,
+.ww-error-state {
+  min-height: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  color: var(--sent-text-muted);
+  font-size: 0.88rem;
+}
+
+.ww-spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid var(--sent-line);
+  border-top-color: var(--sent-primary);
+  border-radius: 50%;
+  animation: wwSpin 0.75s linear infinite;
+}
+
+@keyframes wwSpin {
+  to { transform: rotate(360deg); }
+}
+
+.ww-error-icon { font-size: 1.8rem; }
+
+.ww-retry {
+  border: 1px solid var(--sent-primary);
+  background: transparent;
+  color: var(--sent-primary);
+  border-radius: 8px;
+  padding: 0.35rem 0.75rem;
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 600;
+  font-family: 'Public Sans', sans-serif;
+  transition: background 0.15s;
+}
+
+.ww-retry:hover {
+  background: var(--sent-primary);
+  color: #fff;
+}
+
+@media (max-width: 600px) {
+  .ww-current { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
+  .ww-stats-grid { grid-template-columns: 1fr 1fr; }
+  .ww-forecast-strip { gap: 0.35rem; }
+  .ww-day-card { min-width: 68px; }
+}
