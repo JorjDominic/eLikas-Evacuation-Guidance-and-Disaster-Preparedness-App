@@ -24,8 +24,8 @@ export const WMO_CODES = {
   63: { label: 'Moderate Rain',        icon: '🌧️', risk: 'high'   },
   65: { label: 'Heavy Rain',           icon: '🌧️', risk: 'high'   },
   80: { label: 'Light Showers',        icon: '🌦️', risk: 'medium' },
-  81: { label: 'Moderate Showers',     icon: '🌧️', risk: 'high'   },
-  82: { label: 'Violent Showers',      icon: '⛈️',  risk: 'critical'},
+  81: { label: 'Moderate Showers',     icon: '🌧️', risk: 'medium' },
+  82: { label: 'Violent Showers',      icon: '⛈️',  risk: 'high'  },
   95: { label: 'Thunderstorm',         icon: '⛈️',  risk: 'critical'},
   96: { label: 'Thunderstorm + Hail',  icon: '⛈️',  risk: 'critical'},
   99: { label: 'Severe Thunderstorm',  icon: '⛈️',  risk: 'critical'},
@@ -40,8 +40,10 @@ export function assessRisk({ weathercode, rain = 0, windspeed = 0, precipitation
   const codeRisk = (decodeWMO(weathercode)).risk;
   if (codeRisk === 'critical') return 'critical';
   if (rain > 20 || precipitation > 25 || windspeed > 60) return 'critical';
-  if (codeRisk === 'high' || rain > 10 || precipitation > 15 || windspeed > 40) return 'high';
-  if (codeRisk === 'medium' || rain > 3 || precipitation > 5 || windspeed > 25) return 'medium';
+  // High only when code AND actual intensity agree (>7.5mm/h rain or >40km/h wind)
+  if (codeRisk === 'high' && (rain > 7.5 || precipitation > 15 || windspeed > 40)) return 'high';
+  if (rain > 15 || windspeed > 50) return 'high';
+  if (codeRisk === 'high' || codeRisk === 'medium' || rain > 3 || precipitation > 5 || windspeed > 25) return 'medium';
   if (codeRisk === 'low' || windspeed > 15) return 'low';
   return 'none';
 }

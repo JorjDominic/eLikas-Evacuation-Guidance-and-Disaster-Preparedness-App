@@ -3,7 +3,7 @@
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.55);
-  z-index: 200;
+  z-index: 1000;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -170,16 +170,6 @@
   font-size: 0.875rem;
 }
 
-.btn-inline.danger {
-  background: #dc2626;
-  color: #fff;
-  border-color: transparent;
-}
-
-.btn-inline.danger:hover {
-  background: #b91c1c;
-}
-
 .status-pill.warning {
   background: #fef3c7;
   color: #92400e;
@@ -231,6 +221,64 @@
 	border-radius: 1rem;
 	padding: 1rem 1.1rem;
 	box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+}
+
+/* ── Map picker (inside Add/Edit modal) ── */
+.ac-map {
+  height: 260px;
+  width: 100%;
+  border-radius: 0.5rem;
+  border: 1px solid var(--border, #e5e7eb);
+  cursor: crosshair;
+  margin-top: 0.25rem;
+}
+
+.ac-map-hint {
+  font-size: 0.8rem;
+  color: var(--text-muted, #666);
+  margin: 0.3rem 0 0.4rem;
+}
+
+.ac-coords-hint {
+  font-size: 0.8rem;
+  color: var(--text-muted, #555);
+  margin: 0.4rem 0 0;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.ac-clear-pin {
+  background: none;
+  border: 1px solid var(--border, #d1d5db);
+  border-radius: 0.3rem;
+  padding: 0.15rem 0.5rem;
+  font-size: 0.75rem;
+  cursor: pointer;
+  color: var(--text-muted, #555);
+}
+
+.ac-clear-pin:hover {
+  background: #fee2e2;
+  color: #b91c1c;
+  border-color: #fca5a5;
+}
+
+.ac-gps-btn {
+  background: white;
+  border: 2px solid rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  padding: 4px 10px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: #333;
+  white-space: nowrap;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+}
+
+.ac-gps-btn:hover {
+  background: #f0f0f0;
 }
 
 .admin-head {

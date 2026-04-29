@@ -3,22 +3,22 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
 
 :root {
-    --color-primary: #6c9bcf;
-    --color-danger: #ff0060;
-    --color-success: #1b9c85;
-    --color-warning: #f7d060;
+    --color-primary: #8a9ec4;
+    --color-danger: #c41919;
+    --color-success: #0d6e40;
+    --color-warning: #c06000;
     --color-white: #fff;
-    --color-info-dark: #7d8da1;
-    --color-dark: #363949;
-    --color-light: rgba(132, 139, 200, 0.18);
-    --color-dark-variant: #677483;
-    --color-background: #f6f6f9;
-    --card-border-radius: 2rem;
+    --color-info-dark: #5a5850;
+    --color-dark: #1a1a14;
+    --color-light: rgba(26, 58, 95, 0.12);
+    --color-dark-variant: #5a5850;
+    --color-background: #faf6ee;
+    --card-border-radius: 10px;
     --border-radius-1: 0.4rem;
-    --border-radius-2: 1.2rem;
+    --border-radius-2: 0.6rem;
     --card-padding: 1.8rem;
     --padding-1: 1.2rem;
-    --box-shadow: 0 2rem 3rem var(--color-light);
+    --box-shadow: 0 2px 10px rgba(26, 58, 95, 0.10);
 }
 
 * {
@@ -44,10 +44,7 @@ html, body, #root {
   scroll-behavior: smooth;
 }
 
-/* Account for fixed navbar */
-body {
-  padding-top: 80px;
-}
+/* Account for fixed navbar — handled per-layout via inline style in App.js */
 
 body {
   overflow-x: hidden;
@@ -884,17 +881,17 @@ p {
 
 .alert-item.alert-high {
   border-left-color: var(--danger);
-  background: rgba(255, 0, 96, 0.04);
+  background: rgba(196, 25, 25, 0.05);
 }
 
 .alert-item.alert-medium {
   border-left-color: var(--warning);
-  background: rgba(247, 208, 96, 0.08);
+  background: rgba(179, 80, 0, 0.07);
 }
 
 .alert-item.alert-low {
   border-left-color: var(--success);
-  background: rgba(27, 156, 133, 0.05);
+  background: rgba(11, 107, 64, 0.05);
 }
 
 .alert-item h3,
@@ -1145,8 +1142,8 @@ p {
   align-items: center;
   gap: 0.75rem;
   padding: 0.75rem 1rem;
-  background: rgba(27, 156, 133, 0.08);
-  border: 1px solid rgba(27, 156, 133, 0.22);
+  background: rgba(11, 107, 64, 0.07);
+  border: 1px solid rgba(11, 107, 64, 0.20);
   border-radius: var(--radius-md);
   color: var(--text-primary);
   font-weight: 500;

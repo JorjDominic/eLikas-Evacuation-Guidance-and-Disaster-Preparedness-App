@@ -295,7 +295,7 @@ function App() {
         onNavigate={setPage}
         onLogout={handleLogout}
       />
-      <div key={page} style={{ paddingTop: '62px' }}>
+      <div key={page}>
         {renderPage()}
       </div>
     </div>

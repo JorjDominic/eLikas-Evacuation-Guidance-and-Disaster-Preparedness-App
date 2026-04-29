@@ -18,7 +18,7 @@
 			transparent 1px,
 			transparent 28px
 		),
-		linear-gradient(135deg, #6c9bcf 0%, #5a82b8 45%, #1b9c85 100%);
+		linear-gradient(135deg, #6c9bcf 0%, #1a3a5f 45%, #8b2008 100%);
 	padding: 2rem 1rem;
 	font-family: 'Poppins', sans-serif;
 }
@@ -77,7 +77,7 @@
 .signup-card button {
 	margin-top: 0.45rem;
 	border: none;
-	background: #1b9c85;
+	background: #1a3a5f;
 	color: #fff;
 	border-radius: 0.6rem;
 	padding: 0.78rem;

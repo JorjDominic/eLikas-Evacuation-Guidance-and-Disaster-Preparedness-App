@@ -36,10 +36,10 @@ function AdminDashboardPage({ user, onLogout }) {
 	}, []);
 
 	const metricCards = [
-		{ label: 'Total Users',     value: stats.users   },
-		{ label: 'Centers Managed', value: stats.centers },
-		{ label: 'Open Alerts',     value: stats.alerts  },
-		{ label: 'Pending Reports', value: stats.pending },
+		{ label: 'Total Users',     icon: '👤', value: stats.users,   tone: 'primary' },
+		{ label: 'Centers Managed', icon: '🏢', value: stats.centers, tone: 'success' },
+		{ label: 'Open Alerts',     icon: '⚠️',  value: stats.alerts,  tone: 'danger'  },
+		{ label: 'Pending Reports', icon: '📋', value: stats.pending, tone: 'warning' },
 	];
 
 	return (
@@ -62,7 +62,8 @@ function AdminDashboardPage({ user, onLogout }) {
 
 				<div className="metrics-grid">
 					{metricCards.map((item) => (
-						<div key={item.label} className="metric">
+						<div key={item.label} className={`metric ${item.tone}`}>
+							<span className="metric__icon">{item.icon}</span>
 							<span>{item.label}</span>
 							<strong>{loading ? '…' : item.value}</strong>
 						</div>
@@ -72,37 +73,47 @@ function AdminDashboardPage({ user, onLogout }) {
 				<div className="panel-grid">
 					<div className="card" style={{ gridColumn: 'span 6' }}>
 						<h2>System Status</h2>
-						<ul className="item-list">
-							<li>API Services: Operational</li>
-							<li>Notification Queue: Healthy</li>
-							<li>Center Data Sync: Up to date</li>
-							<li>Report Moderation: {loading ? '…' : `${stats.pending} pending`}</li>
+						<ul className="status-list" style={{ marginTop: '0.5rem' }}>
+							<li><span className="status-dot ok" />API Services: Operational</li>
+							<li><span className="status-dot ok" />Notification Queue: Healthy</li>
+							<li><span className="status-dot ok" />Center Data Sync: Up to date</li>
+							<li>
+								<span className={`status-dot ${!loading && stats.pending > 0 ? 'warn' : 'ok'}`} />
+								Report Moderation: {loading ? '…' : `${stats.pending} pending`}
+							</li>
 						</ul>
 					</div>
 
 					<div className="card" style={{ gridColumn: 'span 6' }}>
 						<h2>Pending Hazard Reports</h2>
 						{loading && <p>Loading…</p>}
-						{!loading && pendingReports.length === 0 && <p>No pending reports. All clear.</p>}
-						<ul className="item-list">
+						{!loading && pendingReports.length === 0 && (
+							<div className="info-strip ok" style={{ marginTop: '0.5rem' }}>
+								<span>✅</span>
+								<span>No pending reports. Moderation queue is clear.</span>
+							</div>
+						)}
+						<ul className="timeline-stack" style={{ marginTop: '0.5rem' }}>
 							{pendingReports.map((r) => (
 								<li key={r.id}>
-									<strong>{r.hazard_type}</strong> — {r.location}
+									<strong style={{ color: 'var(--sent-primary)' }}>{r.hazard_type}</strong>
+									<span style={{ color: 'var(--sent-text-muted)', fontSize: '0.85rem' }}> — {r.location}</span>
 									<br />
-									<small>{new Date(r.created_at).toLocaleString('en-PH', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</small>
+									<small style={{ color: 'var(--sent-text-muted)' }}>{new Date(r.created_at).toLocaleString('en-PH', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}</small>
 								</li>
 							))}
 						</ul>
 					</div>
 				</div>
 
-				<div className="sub-grid" style={{ marginTop: '0.9rem' }}>
+				<hr className="section-divider" />
+				<div className="sub-grid">
 					<div className="subtle-card" style={{ gridColumn: 'span 8' }}>
-						<h3>Operational Focus</h3>
-						<p>Tonight's highest priority is validating reports from low-lying barangays before route recommendations are pushed to residents.</p>
+						<h3>🎯 Operational Focus</h3>
+						<p>Tonight’s highest priority is validating reports from low-lying barangays before route recommendations are pushed to residents.</p>
 					</div>
 					<div className="subtle-card" style={{ gridColumn: 'span 4' }}>
-						<h3>Next Broadcast</h3>
+						<h3>📡 Next Broadcast</h3>
 						<p>Preparedness bulletin scheduled for 18:00 with flood and transport updates.</p>
 					</div>
 				</div>

@@ -1,7 +1,49 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
+import { MapContainer, TileLayer, Marker, Popup, useMapEvents, useMap } from 'react-leaflet';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 import { supabase } from '../../config/supabase';
 import '../../styles/shared/sentinel.css';
 import '../../styles/admin/AdminCentersPage.css';
+
+import iconUrl from 'leaflet/dist/images/marker-icon.png';
+import iconRetinaUrl from 'leaflet/dist/images/marker-icon-2x.png';
+import shadowUrl from 'leaflet/dist/images/marker-shadow.png';
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({ iconUrl, iconRetinaUrl, shadowUrl });
+
+const BULACAN_CENTER = [14.7942, 120.8793];
+
+function FlyTo({ position }) {
+  const map = useMap();
+  useEffect(() => { if (position) map.flyTo(position, 15, { duration: 0.8 }); }, [position, map]);
+  return null;
+}
+
+function ClickToPin({ onPin }) {
+  useMapEvents({ click: (e) => onPin(e.latlng.lat, e.latlng.lng) });
+  return null;
+}
+
+function GpsLocator({ onPin }) {
+  const map = useMap();
+  const [status, setStatus] = useState('idle');
+  const handleGps = () => {
+    if (status === 'locating') return;
+    setStatus('locating');
+    map.locate({ setView: true, maxZoom: 16 });
+    map.once('locationfound', (e) => { onPin(e.latlng.lat, e.latlng.lng); setStatus('found'); });
+    map.once('locationerror', () => { setStatus('error'); setTimeout(() => setStatus('idle'), 3000); });
+  };
+  const labels = { idle: 'Use GPS', locating: 'Locating…', found: 'Located', error: 'GPS Denied' };
+  return (
+    <div className="leaflet-top leaflet-right" style={{ pointerEvents: 'none' }}>
+      <div className="leaflet-control" style={{ pointerEvents: 'auto', marginTop: '0.5rem', marginRight: '0.5rem' }}>
+        <button type="button" className="ac-gps-btn" onClick={handleGps}>{labels[status]}</button>
+      </div>
+    </div>
+  );
+}
 
 const FACILITY_OPTIONS = [
   'Restrooms', 'Generator', 'Medical Bay', 'Kitchen', 'Potable Water',
@@ -29,6 +71,16 @@ function CenterModal({ initial, onSave, onClose }) {
   const [error, setError] = useState('');
 
   const set = (field, value) => setForm((f) => ({ ...f, [field]: value }));
+
+  const handlePin = (lat, lng) => {
+    setForm((f) => ({ ...f, latitude: String(lat.toFixed(6)), longitude: String(lng.toFixed(6)) }));
+  };
+
+  const pinPos =
+    form.latitude !== '' && form.longitude !== '' &&
+    !isNaN(Number(form.latitude)) && !isNaN(Number(form.longitude))
+      ? [Number(form.latitude), Number(form.longitude)]
+      : null;
 
   const toggleFacility = (facility) => {
     setForm((f) => ({
@@ -100,11 +152,39 @@ function CenterModal({ initial, onSave, onClose }) {
           </fieldset>
 
           <fieldset>
-            <legend>Location Coordinates</legend>
+            <legend>Location — tap map or enter coordinates</legend>
             <div className="ac-field-row">
               <label>Latitude<input type="number" step="any" value={form.latitude} onChange={(e) => set('latitude', e.target.value)} placeholder="e.g. 14.8527" /></label>
               <label>Longitude<input type="number" step="any" value={form.longitude} onChange={(e) => set('longitude', e.target.value)} placeholder="e.g. 120.8164" /></label>
             </div>
+            <p className="ac-map-hint">Tap anywhere on the map to pin the center's exact location.</p>
+            <MapContainer
+              key={initial?.id || 'new'}
+              center={pinPos || BULACAN_CENTER}
+              zoom={pinPos ? 15 : 11}
+              className="ac-map"
+              scrollWheelZoom
+            >
+              <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+              <ClickToPin onPin={handlePin} />
+              <GpsLocator onPin={handlePin} />
+              {pinPos && <Marker position={pinPos} />}
+            </MapContainer>
+            {pinPos && (
+              <p className="ac-coords-hint">
+                Pinned: {Number(form.latitude).toFixed(5)}°N, {Number(form.longitude).toFixed(5)}°E
+                <button
+                  type="button"
+                  className="ac-clear-pin"
+                  onClick={() => setForm((f) => ({ ...f, latitude: '', longitude: '' }))}
+                >
+                  ✕ Clear pin
+                </button>
+              </p>
+            )}
           </fieldset>
 
           <fieldset>
@@ -147,9 +227,12 @@ function AdminCentersPage() {
   const [centers, setCenters] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [modal, setModal] = useState(null); // null | { mode: 'add' } | { mode: 'edit', center }
+  const [modal, setModal] = useState(null);
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [deleting, setDeleting] = useState(false);
+  const [highlighted, setHighlighted] = useState(null);
+  const [flyTo, setFlyTo] = useState(null);
+  const rowRefs = useRef({});
 
   const fetchCenters = useCallback(async () => {
     setLoading(true);
@@ -193,6 +276,16 @@ function AdminCentersPage() {
 
   const statusClass = (s) => ({ open: 'open', full: 'warning', closed: 'closed' }[s] || 'open');
 
+  const handleMarkerClick = (center) => {
+    setHighlighted(center.id);
+    if (center.latitude && center.longitude) setFlyTo([center.latitude, center.longitude]);
+    setTimeout(() => {
+      rowRefs.current[center.id]?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 400);
+  };
+
+  const mappable = centers.filter((c) => c.latitude != null && c.longitude != null);
+
   return (
     <section className="app-page">
       <div className="app-shell">
@@ -213,6 +306,45 @@ function AdminCentersPage() {
 
         {error && <div className="ac-page-error">{error}</div>}
 
+        {!loading && mappable.length > 0 && (
+          <div className="card" style={{ marginBottom: '1.1rem', padding: '0' }}>
+            <MapContainer
+              center={BULACAN_CENTER}
+              zoom={11}
+              style={{ height: '340px', width: '100%', borderRadius: '0.75rem' }}
+              scrollWheelZoom={false}
+            >
+              <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+              <FlyTo position={flyTo} />
+              {mappable.map((center) => (
+                <Marker
+                  key={center.id}
+                  position={[center.latitude, center.longitude]}
+                  eventHandlers={{ click: () => handleMarkerClick(center) }}
+                >
+                  <Popup>
+                    <strong>{center.name}</strong><br />
+                    {center.municipality}{center.barangay ? `, ${center.barangay}` : ''}<br />
+                    <span style={{ textTransform: 'capitalize' }}>{center.status}</span>
+                    {' · '}{center.current_occupancy ?? 0} / {center.capacity}
+                    <br />
+                    <button
+                      type="button"
+                      style={{ marginTop: '0.4rem', fontSize: '0.75rem', cursor: 'pointer' }}
+                      onClick={() => setModal({ mode: 'edit', center })}
+                    >
+                      Edit Center
+                    </button>
+                  </Popup>
+                </Marker>
+              ))}
+            </MapContainer>
+          </div>
+        )}
+
         <div className="table-shell card">
           {loading ? (
             <p className="ac-loading">Loading centers…</p>
@@ -232,7 +364,11 @@ function AdminCentersPage() {
               </thead>
               <tbody>
                 {centers.map((center) => (
-                  <tr key={center.id}>
+                  <tr
+                    key={center.id}
+                    ref={(el) => { rowRefs.current[center.id] = el; }}
+                    style={highlighted === center.id ? { background: 'var(--color-primary-soft, #eff6ff)' } : {}}
+                  >
                     <td>{center.name}</td>
                     <td>{center.barangay ? `${center.barangay}, ${center.municipality}` : center.municipality}</td>
                     <td>{center.current_occupancy} / {center.capacity}</td>
@@ -243,6 +379,9 @@ function AdminCentersPage() {
                     </td>
                     <td><span className={`status-pill ${statusClass(center.status)}`}>{center.status}</span></td>
                     <td className="ac-action-cell">
+                      {center.latitude && center.longitude && (
+                        <button type="button" className="btn-inline" onClick={() => handleMarkerClick(center)}>Map</button>
+                      )}
                       <button type="button" className="btn-inline" onClick={() => setModal({ mode: 'edit', center })}>Edit</button>
                       <button type="button" className="btn-inline danger" onClick={() => setDeleteTarget(center)}>Delete</button>
                     </td>

@@ -45,7 +45,7 @@ function LandingPage({ onLogin, onRegister }) {
             onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
           >
             <img src="/elikas icon transparent.png" alt="eLikas logo" className="nav-logo" />
-            eLikas Bulacan
+            eLikas
           </a>
           <nav className="desktop-links" aria-label="Primary">
             <a href="#features">Features</a>
@@ -120,7 +120,7 @@ function LandingPage({ onLogin, onRegister }) {
         <div className="layout hero-content">
           <p className="eyebrow">Community Emergency Platform</p>
           <h1>
-            eLikas Bulacan: <span>Preparedness that reaches every barangay.</span>
+            eLikas: <span>Preparedness that reaches every barangay.</span>
           </h1>
           <p className="hero-copy">
             A single place for flood advisories, evacuation center availability, and response guides so families can act fast and stay safe.
@@ -251,7 +251,7 @@ function LandingPage({ onLogin, onRegister }) {
 
       <footer className="footer">
         <div className="layout footer-inner">
-          <p>eLikas Bulacan</p>
+          <p>eLikas</p>
           <p>Resilient communities through coordinated emergency response.</p>
         </div>
       </footer>

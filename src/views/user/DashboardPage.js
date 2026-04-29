@@ -35,9 +35,9 @@ function DashboardPage({ user, onNavigate }) {
 	}, []);
 
 	const metricCards = [
-		{ label: 'Active Alerts',   value: stats.alerts,  tone: 'danger'  },
-		{ label: 'Open Centers',    value: stats.centers, tone: 'primary' },
-		{ label: 'Active Routes',   value: stats.routes,  tone: 'success' },
+		{ label: 'Active Alerts',   icon: '🚨', value: stats.alerts,  tone: 'danger'  },
+		{ label: 'Open Centers',    icon: '🏠', value: stats.centers, tone: 'primary' },
+		{ label: 'Active Routes',   icon: '🛣️', value: stats.routes,  tone: 'success' },
 	];
 
 	return (
@@ -60,6 +60,7 @@ function DashboardPage({ user, onNavigate }) {
 				<div className="metrics-grid">
 					{metricCards.map((item) => (
 						<div key={item.label} className={`metric ${item.tone}`}>
+							<span className="metric__icon">{item.icon}</span>
 							<span>{item.label}</span>
 							<strong>{loading ? '…' : item.value}</strong>
 						</div>
@@ -70,12 +71,17 @@ function DashboardPage({ user, onNavigate }) {
 					<div className="card" style={{ gridColumn: 'span 7' }}>
 						<h2>Recent Alerts</h2>
 						{loading && <p>Loading…</p>}
-						{!loading && recentAlerts.length === 0 && <p>No active alerts at this time.</p>}
-						<ul className="item-list">
+						{!loading && recentAlerts.length === 0 && (
+							<div className="info-strip ok" style={{ marginTop: '0.5rem' }}>
+								<span>✅</span>
+								<span>No active alerts at this time. All conditions normal.</span>
+							</div>
+						)}
+						<ul className="timeline-stack" style={{ marginTop: '0.5rem' }}>
 							{recentAlerts.map((a) => (
-								<li key={a.id} style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+								<li key={a.id} style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', flexWrap: 'wrap' }}>
 									<span className={`status-pill ${a.level}`}>{a.level}</span>
-									{a.title}
+									<span style={{ fontSize: '0.9rem', flex: 1 }}>{a.title}</span>
 								</li>
 							))}
 						</ul>
@@ -89,10 +95,9 @@ function DashboardPage({ user, onNavigate }) {
 							<button type="button" className="btn-inline" onClick={() => onNavigate('guides')}>Open Guides</button>
 							<button type="button" className="btn-inline danger" onClick={() => onNavigate('hazard-report')}>Report Hazard</button>
 						</div>
-						<div className="tag-cluster">
-							<span className="ghost-tag">Flood</span>
-							<span className="ghost-tag">Evacuation</span>
-							<span className="ghost-tag">Family Checklist</span>
+						<div className="info-strip" style={{ marginTop: '0.85rem', marginBottom: 0 }}>
+							<span>💡</span>
+							<span>Prepare a 72-hour go-bag, know your nearest evacuation center, and keep emergency contacts updated.</span>
 						</div>
 					</div>
 				</div>
@@ -105,16 +110,19 @@ function DashboardPage({ user, onNavigate }) {
 				</div>
 
 				{topAlert && (
-					<div className="sub-grid" style={{ marginTop: '0.9rem' }}>
-						<div className="subtle-card" style={{ gridColumn: 'span 8' }}>
-							<h3>Priority Advisory</h3>
+					<>
+					<hr className="section-divider" />
+					<div className="sub-grid">
+						<div className="subtle-card card--danger" style={{ gridColumn: 'span 8' }}>
+							<h3>🔴 Priority Advisory</h3>
 							<p>{topAlert.title}</p>
 						</div>
 						<div className="subtle-card" style={{ gridColumn: 'span 4' }}>
-							<h3>Response Tip</h3>
+							<h3>⚡ Response Tip</h3>
 							<p>Charge devices now and assign one family contact to monitor verified announcements.</p>
 						</div>
 					</div>
+					</>
 				)}
 			</div>
 		</section>
