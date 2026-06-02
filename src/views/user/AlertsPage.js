@@ -4,6 +4,7 @@ import 'leaflet/dist/leaflet.css';
 import { useAlerts } from '../../hooks/useAlerts';
 import '../../utils/leafletIcons';
 import '../../styles/shared/sentinel.css';
+import '../../styles/user/AlertsPage.css';
 import WeatherWidget from '../../components/WeatherWidget';
 
 const BULACAN_CENTER = [14.7942, 120.8793];

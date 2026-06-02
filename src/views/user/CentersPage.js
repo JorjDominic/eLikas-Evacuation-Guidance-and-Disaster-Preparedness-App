@@ -5,6 +5,7 @@ import 'leaflet/dist/leaflet.css';
 import { useCenters } from '../../hooks/useCenters';
 import '../../utils/leafletIcons';
 import '../../styles/shared/sentinel.css';
+import '../../styles/user/CentersPage.css';
 
 const BULACAN_CENTER = [14.7942, 120.8793];
 

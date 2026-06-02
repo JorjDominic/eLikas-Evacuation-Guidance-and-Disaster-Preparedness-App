@@ -192,6 +192,13 @@ function AdminAlertsPage() {
 			if (err) return { error: err.message };
 			await writeAuditLog({ actorId: currentUser?.id, actorName: currentUser?.name, action: 'alert.create', targetType: 'alert', targetId: data?.id, meta: { title: form.title } });
 			fireNotification('Alert Created', `"${form.title}" has been published.`, form.level || 'info');
+			// Trigger Web Push for high-severity alerts so subscribers receive
+			// an OS notification even when the app is closed / in background.
+			if (form.level === 'high' && data) {
+				supabase.functions.invoke('send-push-notification', {
+					body: { alert: data },
+				}).catch((e) => console.warn('[eLikas] Push dispatch failed:', e?.message));
+			}
 		} else {
 			const { error: err } = await supabase.from('alerts').update(form).eq('id', modal.alert.id);
 			if (err) return { error: err.message };

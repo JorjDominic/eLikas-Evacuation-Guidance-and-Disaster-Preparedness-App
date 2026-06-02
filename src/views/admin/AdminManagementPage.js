@@ -1,10 +1,19 @@
 import React from 'react';
-import AdminUsersPage from './AdminUsersPage';
-import AdminAuditLogsPage from './AdminAuditLogsPage';
-import AdminSimulationPage from './AdminSimulationPage';
-import AdminSettingsPage from './AdminSettingsPage';
 import '../../styles/shared/sentinel.css';
 import '../../styles/shared/TabPageWrapper.css';
+
+const AdminUsersPage      = React.lazy(() => import('./AdminUsersPage'));
+const AdminAuditLogsPage  = React.lazy(() => import('./AdminAuditLogsPage'));
+const AdminSimulationPage = React.lazy(() => import('./AdminSimulationPage'));
+const AdminSettingsPage   = React.lazy(() => import('./AdminSettingsPage'));
+
+function TabFallback() {
+  return (
+    <div style={{ minHeight: '40vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <span style={{ color: 'var(--sent-text-muted, #5a5850)', fontSize: '0.9rem' }}>Loading…</span>
+    </div>
+  );
+}
 
 export default function AdminManagementPage({ initialTab }) {
   const tab = initialTab || 'users';
@@ -22,7 +31,9 @@ export default function AdminManagementPage({ initialTab }) {
   return (
     <div className="tabbed-page-wrapper">
       <div className="tabbed-page-wrapper__content">
-        {renderTab()}
+        <React.Suspense fallback={<TabFallback />}>
+          {renderTab()}
+        </React.Suspense>
       </div>
     </div>
   );

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../config/supabase';
 import { useAuth } from '../../context/AuthContext';
-import { writeAuditLog } from '../../services/adminService';
 import '../../styles/shared/sentinel.css';
 
 const STATUS_CLASS = { pending: 'warning', approved: 'open', rejected: 'danger' };
@@ -71,14 +70,6 @@ function MyReportsPage() {
       setError('Failed to delete report: ' + err.message);
     } else {
       setReports((prev) => prev.filter((r) => r.id !== reportId));
-      await writeAuditLog({
-        actorId: currentUser?.id,
-        actorName: currentUser?.name || currentUser?.email,
-        action: 'report.delete',
-        targetType: 'hazard_report',
-        targetId: reportId,
-        meta: { deletedBy: 'reporter' },
-      });
     }
   };
 

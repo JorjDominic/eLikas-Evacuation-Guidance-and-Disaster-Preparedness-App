@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useAlerts } from '../../hooks/useAlerts';
 import { useNotifications } from '../../hooks/useNotifications';
 import '../../styles/shared/sentinel.css';
+import '../../styles/user/DashboardPage.css';
 import WeatherWidget from '../../components/WeatherWidget';
 
 function DashboardPage() {

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { supabase } from '../../config/supabase';
 import { fireNotification } from '../../hooks/useNotifications';
+import '../../styles/shared/sentinel.css';
+import '../../styles/user/ProfilePage.css';
 
 function ProfilePage() {
 	const { currentUser, setCurrentUser } = useAuth();

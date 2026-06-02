@@ -145,7 +145,7 @@ function AppContent() {
   const renderPage = () => {
     const adminPage = page.startsWith('admin-');
     if (adminPage && !isAdmin) return <DashboardPage />;
-    if (!adminPage && isAdmin && ['dashboard','centers','center-detail','alerts','guides','user-reports','profile'].includes(page)) {
+    if (!adminPage && isAdmin && ['dashboard','centers','center-detail','alerts','guides','hazard-report','my-reports','user-reports','profile'].includes(page)) {
       return <AdminDashboardPage />;
     }
 
@@ -156,6 +156,8 @@ function AppContent() {
       case 'alerts':         return <AlertsPage />;
       case 'guides':           return <GuidesPage />;
       case 'user-reports':     return <UserReportsPage />;
+      case 'hazard-report':    return <UserReportsPage initialTab="report" />;
+      case 'my-reports':       return <UserReportsPage initialTab="my-reports" />;
       case 'profile':          return <ProfilePage />;
       case 'admin-dashboard': return <AdminDashboardPage />;
       case 'admin-centers':     return <AdminCentersPage />;

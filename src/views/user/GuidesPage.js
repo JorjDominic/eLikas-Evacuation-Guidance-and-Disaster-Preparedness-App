@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useGuides } from '../../hooks/useGuides';
 import '../../styles/shared/sentinel.css';
+import '../../styles/user/GuidesPage.css';
 
 function GuidesPage() {
 	const { guides, loading, error } = useGuides();

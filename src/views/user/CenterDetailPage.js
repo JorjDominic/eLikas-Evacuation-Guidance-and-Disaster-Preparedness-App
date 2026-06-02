@@ -4,6 +4,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { supabase } from '../../config/supabase';
 import '../../styles/shared/sentinel.css';
+import '../../styles/user/CenterDetailPage.css';
 
 import '../../utils/leafletIcons';
 

@@ -116,8 +116,8 @@ self.addEventListener('push', (event) => {
   const title = payload.title || 'eLikas Alert';
   const options = {
     body: payload.body || '',
-    icon: '/elikas icon transparent.png',
-    badge: '/elikas icon transparent.png',
+    icon: '/favicon.ico',
+    badge: '/favicon.ico',
     tag: payload.tag || 'elikas-alert',
     data: { url: payload.url || '/' },
   };

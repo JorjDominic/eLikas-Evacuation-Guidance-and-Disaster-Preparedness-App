@@ -6,6 +6,7 @@ import { writeAuditLog } from '../../services/adminService';
 import { fireNotification } from '../../hooks/useNotifications';
 import { useAuth } from '../../context/AuthContext';
 import '../../styles/shared/sentinel.css';
+import '../../styles/admin/AdminReportsPage.css';
 
 import '../../utils/leafletIcons';
 
